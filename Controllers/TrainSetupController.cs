@@ -1,19 +1,21 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Layout.Data;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Layout.Controllers
 {
     public class TrainSetupController : Controller
     {
-        private readonly ILogger<TrainSetupController> _logger;
+        private readonly IDataRepository _DataRepository;
 
-        public TrainSetupController(ILogger<TrainSetupController>logger)
+        public TrainSetupController(IDataRepository DataRepository)
         {
-            _logger = logger;
+            _DataRepository = DataRepository;
         }
 
-        public IActionResult AddTrain()
+        public async Task<IActionResult> AddTrain()
         {
-            return View();
+            var trains = await _DataRepository.TrainList();
+            return View(trains);
         }
     }
 }
