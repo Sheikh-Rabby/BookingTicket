@@ -17,5 +17,18 @@ namespace Layout.Controllers
             var trains = await _DataRepository.TrainList();
             return View(trains);
         }
+
+        [HttpPost]  
+         public async Task<IActionResult> AddTrains(string trainName)
+        {
+            await _DataRepository.AddTrains(trainName);
+            return RedirectToAction("AddTrain");
+        }
+        [HttpPost]
+        public async Task<IActionResult> IsActive(string trainId)
+        {
+            await _DataRepository.IsActive(trainId);
+            return Json(new { success = true });
+        }
     }
 }
