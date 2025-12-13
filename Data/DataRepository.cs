@@ -56,5 +56,18 @@ namespace Layout.Data
             }
         }
 
+        public async Task<List<Station>> StationList()
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync<Station>(
+
+                "dbo.stationList",
+                commandType: CommandType.StoredProcedure
+                );
+            return stations.ToList();
+        }
+
+
+
     }
 }

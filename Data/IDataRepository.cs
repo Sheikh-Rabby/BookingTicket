@@ -5,10 +5,9 @@ namespace Layout.Data
     public interface IDataRepository
     {
         Task<List<Train>> TrainList();
-
         Task AddTrains(string trainName);
-
         Task IsActive(string trainId);
+        Task<List<Station>> StationList();
        
     }
 }

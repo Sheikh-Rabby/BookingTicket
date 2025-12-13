@@ -30,5 +30,15 @@ namespace Layout.Controllers
             await _DataRepository.IsActive(trainId);
             return Json(new { success = true });
         }
+
+        [HttpGet]
+        public async Task<IActionResult> AddStation()
+        {
+            var stations = await _DataRepository.StationList();
+            return View(stations);
+        }
+
+
+
     }
 }

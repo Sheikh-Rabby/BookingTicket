@@ -7,4 +7,13 @@
         public bool? isActive { get; set; }
       
     }
+    public class Station
+    {
+        public string? stationId { get; set; }
+        public string? stationName { get; set; }
+        public bool? isActive { get; set; }
+
+    }
+
+
 }
