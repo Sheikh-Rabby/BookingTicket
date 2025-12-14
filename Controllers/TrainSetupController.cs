@@ -38,6 +38,20 @@ namespace Layout.Controllers
             return View(stations);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddStations(string stationName)
+        {
+            await _DataRepository.AddStations(stationName);
+            return RedirectToAction("AddStation");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> StationIsActive(string stationId)
+        {
+            await _DataRepository.AddStations(stationId);
+            return Json(new { success = true });
+        }
+
 
 
     }

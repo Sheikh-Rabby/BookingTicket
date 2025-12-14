@@ -44,7 +44,7 @@
                 <div class="card-header text-center bg-primary text-white fs-5 fw-bold">
                     Add Station
                 </div>
-                <form asp-controller="TrainSetup" asp-action="AddTrains">
+                <form asp-controller="TrainSetup" asp-action="AddStations">
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
                             <div class="col-2">
@@ -104,14 +104,14 @@
 
 
         $(document).on("change", ".form-check-input", function() {
-            var trainId = $(this).val();
+            var stationId = $(this).val();
 
             $.ajax({
-                url: '/TrainSetup/IsActive',
+                url: '/TrainSetup/StationIsActive',
                 type: 'POST',
-                data: { trainId: trainId },
+                data: { stationId: stationId },
                 success: function(res) {
-                    console.log("TrainId sent: " + trainId);
+                    console.log("TrainId sent: " + stationId);
                 },
                 error: function(err) {
                     console.log("Error sending TrainId", err);

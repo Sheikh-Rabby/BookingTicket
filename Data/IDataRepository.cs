@@ -8,6 +8,9 @@ namespace Layout.Data
         Task AddTrains(string trainName);
         Task IsActive(string trainId);
         Task<List<Station>> StationList();
-       
+        Task AddStations(string stationName);
+        Task StationIsActive(string stationId);
+
+
     }
 }

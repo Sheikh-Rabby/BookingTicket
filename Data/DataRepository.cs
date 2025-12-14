@@ -67,6 +67,26 @@ namespace Layout.Data
             return stations.ToList();
         }
 
+        public async Task AddStations(string stationName)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "dbo.AddStation", new { stationName = stationName },
+                commandType: CommandType.StoredProcedure
+                );
+            
+        }
+        public async Task StationIsActive(string stationId)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "dbo.stationIsActive", new { stationId = stationId },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
 
 
     }
