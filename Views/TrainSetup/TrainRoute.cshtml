@@ -1,0 +1,68 @@
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<div class="card shadow-sm mt-3">
+
+    <!-- Card Header -->
+    <div class="card-header bg-body-secondary text-center">
+        <h5 class="mb-0 fw-bold">Train Route</h5>
+    </div>
+
+    <!-- Card Body -->
+    <div class="card-body">
+
+        <div id="TrainRoute">
+            <div class="row mb-2 align-items-center routerow">
+              
+                <!-- Station Input -->
+                <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Add Station">
+                </div>
+
+                <!-- Delete Button -->
+                <div class="col-md-3 ">
+                    <button type="button" class="btn btn-outline-danger">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+               
+
+            </div>
+        </div>
+        <button class="btn btn-primary" id="addroute" type="button">Add</button>
+        <button class="btn btn-success" id="saveroute" type="button">SaveRoute</button>
+
+
+    </div>
+</div>
+<script>
+    $(document).ready(function(){
+    
+     $('#addroute').click(function(){
+      
+     $('#TrainRoute').append(`<div class="row mb-2 align-items-center routerow">
+
+              <div class="col-md-4">
+                    <input type="text" class="form-control" placeholder="Add Station">
+                </div>
+                 <div class="col-md-3 ">
+                    <button type="button" class="btn btn-outline-danger remove">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+               </div>`)
+     
+     
+     });
+
+     $(document).on('click','.remove',function(){
+         $(this).closest(".routerow").remove();
+     });
+    
+    
+    
+    })
+
+
+
+</script>

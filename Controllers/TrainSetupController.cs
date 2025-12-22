@@ -52,6 +52,10 @@ namespace Layout.Controllers
             return Json(new { success = true });
         }
 
+        public async Task<IActionResult>TrainRoute()
+        {
+            return View();
+        }
 
 
     }
