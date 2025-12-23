@@ -10,6 +10,7 @@ namespace Layout.Data
         Task<List<Station>> StationList();
         Task AddStations(string stationName);
         Task StationIsActive(string stationId);
+        Task<List<Train>> RouteTrainList();
 
 
     }

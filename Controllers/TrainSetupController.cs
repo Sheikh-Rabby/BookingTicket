@@ -57,6 +57,12 @@ namespace Layout.Controllers
             return View();
         }
 
+        public async Task<IActionResult> RouteTrainList()
+        {
+            var trains = await _DataRepository.RouteTrainList();
+            return Json(new { success=true, data = trains });
+        }
+
 
     }
 }

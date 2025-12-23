@@ -1,68 +1,115 @@
-﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<div class="card shadow-sm mt-3">
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
 
-    <!-- Card Header -->
-    <div class="card-header bg-body-secondary text-center">
-        <h5 class="mb-0 fw-bold">Train Route</h5>
-    </div>
-
-    <!-- Card Body -->
-    <div class="card-body">
-
-        <div id="TrainRoute">
-            <div class="row mb-2 align-items-center routerow">
-              
-                <!-- Station Input -->
-                <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Add Station">
-                </div>
-
-                <!-- Delete Button -->
-                <div class="col-md-3 ">
-                    <button type="button" class="btn btn-outline-danger">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-               
-
-            </div>
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-train-front me-2"></i>Train Route
+            </h5>
         </div>
-        <button class="btn btn-primary" id="addroute" type="button">Add</button>
-        <button class="btn btn-success" id="saveroute" type="button">SaveRoute</button>
 
+        <!-- Body -->
+        <div class="card-body">
 
+            <!-- Train Select -->
+            <div class="row mb-3">
+                <div class="col-md-4">
+                    <label class="form-label fw-semibold">Select Train</label>
+                    <select class="form-select" id="trainSelect">
+                        <option value="">Select Train</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Route List -->
+            <div id="TrainRoute">
+                <div class="row align-items-center mb-2 routerow">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="Enter Station Name">
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-outline-danger remove">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-outline-primary" id="addroute">
+                    <i class="bi bi-plus-circle me-1"></i>Add Route
+                </button>
+
+                <button class="btn btn-success" id="saveroute">
+                    <i class="bi bi-save me-1"></i>Save Route
+                </button>
+            </div>
+
+        </div>
     </div>
 </div>
+
+<style>
+    .routerow {
+        padding: 8px;
+        border-radius: 6px;
+        transition: background-color 0.2s;
+    }
+
+        .routerow:hover {
+            background-color: #f8f9fa;
+        }
+</style>
+
 <script>
-    $(document).ready(function(){
-    
-     $('#addroute').click(function(){
-      
-     $('#TrainRoute').append(`<div class="row mb-2 align-items-center routerow">
+    $(document).ready(function () {
 
-              <div class="col-md-4">
-                    <input type="text" class="form-control" placeholder="Add Station">
+        
+        $.ajax({
+            url: '/TrainSetup/RouteTrainList', 
+            type: 'GET',
+            success: function(response) {
+                var trains = response.data || response;
+                $('#trainSelect').html('<option value="">Select Train</option>' +
+                    trains.map(t => `<option value="${t.trainId}">${t.trainName}</option>`).join(''));
+            },
+            error: function(xhr) {
+                console.error('Error loading trains:', xhr);
+            }
+        });
+
+        
+        $('#trainSelect').on('change', function() {
+            console.log('Selected train:', $(this).val());
+        });
+
+       
+        $('#addroute').click(function () {
+            $('#TrainRoute').append(`
+                <div class="row align-items-center mb-2 routerow">
+                    <div class="col-md-6">
+                        <input type="text" class="form-control" placeholder="Enter Station Name">
+                    </div>
+                    <div class="col-md-2 text-end">
+                        <button type="button" class="btn btn-outline-danger remove">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
                 </div>
-                 <div class="col-md-3 ">
-                    <button type="button" class="btn btn-outline-danger remove">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </div>
-               </div>`)
-     
-     
-     });
+            `);
+        });
 
-     $(document).on('click','.remove',function(){
-         $(this).closest(".routerow").remove();
-     });
-    
-    
-    
-    })
+        
+        $(document).on('click', '.remove', function () {
+            $(this).closest('.routerow').remove();
+        });
 
+       
 
-
+    });
 </script>

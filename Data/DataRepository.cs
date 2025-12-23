@@ -87,6 +87,17 @@ namespace Layout.Data
                 );
 
         }
+        public async Task<List<Train>> RouteTrainList()
+        {
+            using var connection = CreateConnection();
+            var trains = await connection.QueryAsync<Train>(
+                "dbo.trainList",
+
+                 commandType: CommandType.StoredProcedure
+                    );
+            return trains.ToList();
+
+        }
 
 
     }
