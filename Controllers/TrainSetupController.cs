@@ -63,6 +63,13 @@ namespace Layout.Controllers
             return Json(new { success=true, data = trains });
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddRoute(string trainId,string routeList)
+        {
+            await _DataRepository.AddRoute(trainId, routeList);
+            return RedirectToAction("TrainRoute");
+        }
+
 
     }
 }

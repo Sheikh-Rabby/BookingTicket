@@ -99,6 +99,17 @@ namespace Layout.Data
 
         }
 
+        public async Task AddRoute(string trainId,string routeList)
+        {
+            using var connection = CreateConnection();
+            var routestation = await connection.QueryAsync(
+
+                "dbo.[Trainroutedetails]", new { trainId = trainId , routeList = routeList },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
 
     }
 }

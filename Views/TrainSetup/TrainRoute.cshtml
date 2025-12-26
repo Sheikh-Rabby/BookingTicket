@@ -109,7 +109,54 @@
             $(this).closest('.routerow').remove();
         });
 
-       
+
+        $('#saveroute').click(function(){
+
+          var trainId=$('#trainSelect').val();
+
+          if(trainId ===""){
+              alert("Please select train")
+              return;
+          }
+
+          var routeList=[];
+          
+          $('#TrainRoute .routerow').each(function(){
+              var stations=$(this).find('input').val().trim();
+
+              if(stations !==""){
+                  routeList.push({
+                     stations:stations
+                  });
+              }
+          });
+
+          console.log(routeList);
+
+        if (routeList.length === 0) {
+        alert("Please add at least one station");
+        return;
+        }
+
+        $.ajax({
+             url: '/TrainSetup/AddRoute',
+            type: 'POST',
+            data: {
+                 trainId: trainId,
+                 routeList: JSON.stringify(routeList)
+
+                  
+              },
+           
+             success:function(response){
+                alert("route add successfully")
+                window.location.href = '/TrainSetup/TrainRoute';
+            }
+            
+        })
+        
+        })
+  
 
     });
 </script>
