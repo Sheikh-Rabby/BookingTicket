@@ -14,6 +14,13 @@
         public bool? isActive { get; set; }
 
     }
+    public class Trainclass
+    {
+        public string? ClassId { get; set; }
+        public string? ClassName { get; set; }
+        public bool? isActive { get; set; }
+
+    }
 
 
 }

@@ -69,6 +69,11 @@ namespace Layout.Controllers
             await _DataRepository.AddRoute(trainId, routeList);
             return RedirectToAction("TrainRoute");
         }
+        public async Task<IActionResult> TrainClass()
+        {
+            var trainclass = await _DataRepository.Classlist();
+            return View(trainclass);
+        }
 
 
     }

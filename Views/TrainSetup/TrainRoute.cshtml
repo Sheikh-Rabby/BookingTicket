@@ -21,6 +21,7 @@
                     <label class="form-label fw-semibold">Select Train</label>
                     <select class="form-select" id="trainSelect">
                         <option value="">Select Train</option>
+                        <option value="">Select Trains</option>
                     </select>
                 </div>
             </div>
@@ -75,8 +76,23 @@
             type: 'GET',
             success: function(response) {
                 var trains = response.data || response;
-                $('#trainSelect').html('<option value="">Select Train</option>' +
-                    trains.map(t => `<option value="${t.trainId}">${t.trainName}</option>`).join(''));
+
+                // $('#trainSelect').empty();
+                // $('#trainSelect').append(`<option value="">Select Train</option>`);
+
+                // $.each(trains,function(index,item){
+                //     $('#trainSelect').append(`<option value="${item.trainId}">${item.trainName}</option>`);
+                // });
+
+                 var row = trains.map(t => `<option value="${t.trainId}">${t.trainName}</option>`).join('');
+
+                 $('#trainSelect').html(' <option value="">Select Train</option>'+row);
+
+
+
+
+                // $('#trainSelect').html('<option value="">Select Train</option>' +
+                //     trains.map(t => `<option value="${t.trainId}">${t.trainName}</option>`).join(''));
             },
             error: function(xhr) {
                 console.error('Error loading trains:', xhr);

@@ -110,6 +110,19 @@ namespace Layout.Data
 
         }
 
+        public async Task<List<Trainclass>> Classlist()
+        {
+            using var connection = CreateConnection();
+            var Trainclass = await connection.QueryAsync<Trainclass>(
+
+                "dbo.Classlist",
+                commandType: CommandType.StoredProcedure
+                );
+            return Trainclass.ToList();
+        }
+
+
+
 
     }
 }

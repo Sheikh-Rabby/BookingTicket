@@ -12,6 +12,7 @@ namespace Layout.Data
         Task StationIsActive(string stationId);
         Task<List<Train>> RouteTrainList();
         Task AddRoute(string trainId, string routeList);
+        Task<List<Trainclass>> Classlist();
 
 
     }
