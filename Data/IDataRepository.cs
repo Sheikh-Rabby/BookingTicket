@@ -13,6 +13,7 @@ namespace Layout.Data
         Task<List<Train>> RouteTrainList();
         Task AddRoute(string trainId, string routeList);
         Task<List<Trainclass>> Classlist();
+        Task AddTrainClass(string className);
 
 
     }

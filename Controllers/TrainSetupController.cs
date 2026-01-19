@@ -75,6 +75,12 @@ namespace Layout.Controllers
             return View(trainclass);
         }
 
+        public async Task<IActionResult> AddTrainClass(string className)
+        {
+            await _DataRepository.AddTrainClass(className);
+            return RedirectToAction("TrainClass");
+        }
+
 
     }
 }

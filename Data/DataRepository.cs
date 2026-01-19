@@ -110,6 +110,20 @@ namespace Layout.Data
 
         }
 
+        public async Task AddTrainClass(string className)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "dbo.AddClass", new { className = className },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+
+
+
         public async Task<List<Trainclass>> Classlist()
         {
             using var connection = CreateConnection();
