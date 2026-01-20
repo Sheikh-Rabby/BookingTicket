@@ -1,4 +1,4 @@
-﻿@model List<Layout.Models.Trainclass>
+﻿@model List<Layout.Models.TrainBogie>
 
 @{
     ViewData["Title"] = "Train List";
@@ -42,19 +42,19 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header text-center bg-primary text-white fs-5 fw-bold">
-                    Add Train Class
+                    Add Train Bogie
                 </div>
                 <form asp-controller="TrainSetup" asp-action="AddTrainClass">
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
                             <div class="col-2">
-                                <label class="form-label">Class Name<span class="required-star">*</span></label>
+                                <label class="form-label">Bogie Name<span class="required-star">*</span></label>
                             </div>
                             <div class="col-4">
-                                <input name="className" type="text" class="form-control" placeholder="Enter Class Name" required>
+                                <input name="className" type="text" class="form-control" placeholder="Enter Bogie Name" required>
                             </div>
                             <div class="col-4">
-                                <button type="submit" class="btn btn-success btn-add">Add Class</button>
+                                <button type="submit" class="btn btn-success btn-add">Add Bogie</button>
                             </div>
                         </div>
                     </div>
@@ -69,8 +69,8 @@
 <table class="table table-bordered table-striped" id="class-table">
     <thead>
         <tr>
-            <th>Class ID</th>
-            <th>Class Name</th>
+            <th>Bogie ID</th>
+            <th>Bogie Name</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -78,11 +78,11 @@
         @foreach (var t in Model)
         {
             <tr>
-                <td>@t.ClassId</td>
-                <td>@t.ClassName</td>
+                <td>@t.bogieID</td>
+                <td>@t.bogieName</td>
                 <td>
                     <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" value="@t.ClassId"
+                        <input class="form-check-input" type="checkbox" value="@t.bogieID"
                                @(t.isActive == true ? "checked" : "")>
                     </div>
                 </td>
@@ -111,7 +111,7 @@
                 type: 'POST',
                 data: { classID: ClassId },
                 success: function(res) {
-                    console.log("TrainId sent: " + classID);
+                    console.log("TrainId sent: " + ClassId);
                 },
                 error: function(err) {
                     console.log("Error sending TrainId", err);

@@ -14,6 +14,8 @@ namespace Layout.Data
         Task AddRoute(string trainId, string routeList);
         Task<List<Trainclass>> Classlist();
         Task AddTrainClass(string className);
+        Task ClassIsActive(string classID);
+        Task<IEnumerable<TrainBogie>> BogieList();
 
 
     }

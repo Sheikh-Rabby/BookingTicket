@@ -22,5 +22,14 @@
 
     }
 
+    public class TrainBogie
+    {
+        public string? bogieID { get; set; }
+        public string? bogieName { get; set; }
+        public bool? isActive { get; set; }
+
+    }
+
+
 
 }

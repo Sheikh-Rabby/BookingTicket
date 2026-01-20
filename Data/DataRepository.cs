@@ -19,6 +19,7 @@ namespace Layout.Data
             return new SqlConnection(_connectionString);
         }
 
+        #region train
 
         public async Task<List<Train>> TrainList()
         {
@@ -55,7 +56,9 @@ namespace Layout.Data
 
             }
         }
+        #endregion
 
+        #region station
         public async Task<List<Station>> StationList()
         {
             using var connection = CreateConnection();
@@ -87,6 +90,9 @@ namespace Layout.Data
                 );
 
         }
+        #endregion
+
+        #region route
         public async Task<List<Train>> RouteTrainList()
         {
             using var connection = CreateConnection();
@@ -109,6 +115,9 @@ namespace Layout.Data
                 );
 
         }
+        #endregion
+
+        #region trainClass
 
         public async Task AddTrainClass(string className)
         {
@@ -135,7 +144,34 @@ namespace Layout.Data
             return Trainclass.ToList();
         }
 
+        public async Task ClassIsActive(string classID)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
 
+                "dbo.classIsActive", new { classID = classID },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+        #endregion
+
+
+        #region trainBogie
+
+        public async Task<IEnumerable<TrainBogie>> BogieList()
+        {
+            using var connection = CreateConnection();
+            var Trainclass = await connection.QueryAsync<TrainBogie>(
+
+                "dbo.bogieList",
+                commandType: CommandType.StoredProcedure
+                );
+            return Trainclass.ToList();
+        }
+
+        #endregion
 
 
     }

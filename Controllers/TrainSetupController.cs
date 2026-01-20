@@ -11,12 +11,14 @@ namespace Layout.Controllers
         {
             _DataRepository = DataRepository;
         }
-
+        #region train
+        //station start 
         public async Task<IActionResult> AddTrain()
         {
             var trains = await _DataRepository.TrainList();
             return View(trains);
         }
+        
 
         [HttpPost]  
          public async Task<IActionResult> AddTrains(string trainName)
@@ -30,7 +32,10 @@ namespace Layout.Controllers
             await _DataRepository.IsActive(trainId);
             return Json(new { success = true });
         }
+        //station end 
+        #endregion train
 
+        #region station
         [HttpGet]
         public async Task<IActionResult> AddStation()
         {
@@ -51,7 +56,9 @@ namespace Layout.Controllers
             await _DataRepository.AddStations(stationId);
             return Json(new { success = true });
         }
+        #endregion station
 
+        #region route
         public async Task<IActionResult>TrainRoute()
         {
             return View();
@@ -69,6 +76,10 @@ namespace Layout.Controllers
             await _DataRepository.AddRoute(trainId, routeList);
             return RedirectToAction("TrainRoute");
         }
+        #endregion route
+
+        #region Trainclass
+
         public async Task<IActionResult> TrainClass()
         {
             var trainclass = await _DataRepository.Classlist();
@@ -81,6 +92,27 @@ namespace Layout.Controllers
             return RedirectToAction("TrainClass");
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ClassIsActive(string classID)
+        {
+            await _DataRepository.ClassIsActive(classID);
+            return Json(new { success = true });
+        }
+
+        #endregion
+
+        #region TrainBogie
+
+        public async Task<IActionResult> TrainBogie()
+        {
+            var TrainBogie = await _DataRepository.BogieList();
+            return View(TrainBogie);
+
+        }
+
+
+
+        #endregion
 
     }
 }
