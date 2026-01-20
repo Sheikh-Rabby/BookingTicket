@@ -21,7 +21,7 @@ namespace Layout.Data
 
         #region train
 
-        public async Task<List<Train>> TrainList()
+        public async Task<IEnumerable<Train>> TrainList()
         {
             using var connection = CreateConnection();
             var trains = await connection.QueryAsync<Train>(
@@ -29,7 +29,7 @@ namespace Layout.Data
 
                  commandType: CommandType.StoredProcedure
                     );
-         return trains.ToList();
+         return trains;
 
         }
         
@@ -59,7 +59,7 @@ namespace Layout.Data
         #endregion
 
         #region station
-        public async Task<List<Station>> StationList()
+        public async Task<IEnumerable<Station>> StationList()
         {
             using var connection = CreateConnection();
             var stations = await connection.QueryAsync<Station>(
@@ -67,7 +67,7 @@ namespace Layout.Data
                 "dbo.stationList",
                 commandType: CommandType.StoredProcedure
                 );
-            return stations.ToList();
+            return stations;
         }
 
         public async Task AddStations(string stationName)
@@ -93,7 +93,7 @@ namespace Layout.Data
         #endregion
 
         #region route
-        public async Task<List<Train>> RouteTrainList()
+        public async Task<IEnumerable<Train>> RouteTrainList()
         {
             using var connection = CreateConnection();
             var trains = await connection.QueryAsync<Train>(
@@ -101,7 +101,7 @@ namespace Layout.Data
 
                  commandType: CommandType.StoredProcedure
                     );
-            return trains.ToList();
+            return trains;
 
         }
 
@@ -133,7 +133,7 @@ namespace Layout.Data
 
 
 
-        public async Task<List<Trainclass>> Classlist()
+        public async Task<IEnumerable<Trainclass>> Classlist()
         {
             using var connection = CreateConnection();
             var Trainclass = await connection.QueryAsync<Trainclass>(
@@ -141,7 +141,7 @@ namespace Layout.Data
                 "dbo.Classlist",
                 commandType: CommandType.StoredProcedure
                 );
-            return Trainclass.ToList();
+            return Trainclass;
         }
 
         public async Task ClassIsActive(string classID)
@@ -168,7 +168,7 @@ namespace Layout.Data
                 "dbo.bogieList",
                 commandType: CommandType.StoredProcedure
                 );
-            return Trainclass.ToList();
+            return Trainclass;
         }
 
         #endregion
