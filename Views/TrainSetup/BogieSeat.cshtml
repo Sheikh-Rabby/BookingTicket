@@ -42,19 +42,19 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header text-center bg-primary text-white fs-5 fw-bold">
-                    Add Station
+                    Add Bogie Seat
                 </div>
-                <form asp-controller="TrainSetup" asp-action="AddStations">
+                <form asp-controller="TrainSetup" asp-action="AddBogieSeat">
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
                             <div class="col-2">
                                 <label class="form-label">Train Name<span class="required-star">*</span></label>
                             </div>
                             <div class="col-4">
-                                <input name="stationName" type="text" class="form-control" placeholder="Enter Station Name" required>
+                                <input name="SeatName" type="text" class="form-control" placeholder="Enter Seat Name" required>
                             </div>
                             <div class="col-4">
-                                <button type="submit" class="btn btn-success btn-add">Add Station</button>
+                                <button type="submit" class="btn btn-success btn-add">Add Seat</button>
                             </div>
                         </div>
                     </div>
@@ -64,13 +64,13 @@
     </div>
 </div>
 
-<h2 class="mt-3 mb-3">Station List</h2>
+<h2 class="mt-3 mb-3">Seat List</h2>
 
-<table class="table table-bordered table-striped" id="station-table">
+<table class="table table-bordered table-striped" id="seat-table">
     <thead>
         <tr>
-            <th>Station ID</th>
-            <th>Station Name</th>
+            <th>Seat ID</th>
+            <th>Seat Name</th>
             <th>Status</th>
         </tr>
     </thead>
@@ -95,7 +95,7 @@
     $(document).ready(function(){
 
 
-        $('#station-table').DataTable({
+        $('#seat-table').DataTable({
             responsive: true,
             paging: true,
             searching: true,
@@ -104,14 +104,14 @@
 
 
         $(document).on("change", ".form-check-input", function() {
-            var stationId = $(this).val();
+            var seatID = $(this).val();
 
             $.ajax({
-                url: '/TrainSetup/StationIsActive',
+                url: '/TrainSetup/UpdateSeatStatus',
                 type: 'POST',
-                data: { stationId: stationId },
+                data: { seatID: seatID },
                 success: function(res) {
-                    console.log("TrainId sent: " + stationId);
+                    console.log("TrainId sent: " + seatID);
                 },
                 error: function(err) {
                     console.log("Error sending TrainId", err);

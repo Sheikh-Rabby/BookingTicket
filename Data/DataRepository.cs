@@ -211,6 +211,29 @@ namespace Layout.Data
         }
 
 
+        public async Task AddBogieSeat(string seatName)
+        {
+            using var connection = CreateConnection();
+            var trainBogie = await connection.QueryAsync(
+
+                "dbo.AddBogieSeat", new { seatName = seatName },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+        public async Task UpdateSeatStatus(string seatID)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "dbo.seatStatusUpdate", new { seatID = seatID },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+
         #endregion
 
 

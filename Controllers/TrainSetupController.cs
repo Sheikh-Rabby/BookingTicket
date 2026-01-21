@@ -134,6 +134,18 @@ namespace Layout.Controllers
 
         }
 
+        public async Task<IActionResult> AddBogieSeat(string seatName)
+        {
+            await _DataRepository.AddBogieSeat(seatName);
+            return RedirectToAction("BogieSeat");
+        }
+
+        
+        public async Task<IActionResult> UpdateSeatStatus(string seatID)
+        {
+            await _DataRepository.UpdateSeatStatus(seatID);
+            return Json(new { success = true });
+        }
 
         #endregion
 

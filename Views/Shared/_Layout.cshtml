@@ -1,6 +1,5 @@
 ﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -31,21 +30,9 @@
             z-index: 9999;
         }
 
-            /* Sidebar collapsed */
             .sidebar.collapsed {
                 width: 80px !important;
-               
             }
-
-                .sidebar.collapsed .nav-link {
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center; /* horizontally center */
-                    justify-content: center; /* vertically center */
-                    padding-left: 0 !important;
-                    padding-right: 0 !important;
-                    text-align: center !important;
-                }
 
         /* Navbar collapsed */
         .collapsed-navbar {
@@ -95,7 +82,7 @@
                 transform: rotate(90deg);
             }
 
-        /* Sub menu collapse */
+        /* Sub menu */
         .submenu-collapse {
             display: none;
         }
@@ -114,7 +101,6 @@
             padding: 0 20px;
             margin-left: 250px;
             transition: margin-left 0.3s ease;
-           
         }
 
         .menu-toggle-btn {
@@ -123,7 +109,6 @@
             background: none;
             cursor: pointer;
             margin-right: 15px;
-            align-items: center;
         }
 
         .container-main {
@@ -132,12 +117,11 @@
             transition: margin-left 0.3s ease;
         }
 
+        /* ACTIVE MENU */
         .sidebar-menu a.active {
             background-color: rgba(255, 255, 255, 0.25);
             font-weight: bold;
         }
-
-
     </style>
 </head>
 
@@ -147,32 +131,22 @@
     <div class="sidebar" id="sidebar">
         <ul class="sidebar-menu">
 
-            <li><a href="#">DashBoard</a></li>
+            <li>
+                <a href="/Dashboard/Index">DashBoard</a>
+            </li>
 
             <li class="has-sub">
                 <a href="javascript:void(0)" data-target="#ED">
-                  Trainsetup
+                    Trainsetup
                     <i class="bi bi-chevron-right arrow"></i>
                 </a>
                 <ul class="submenu-collapse sub-menu" id="ED">
                     <li><a href="/TrainSetup/AddTrain">AddTrain</a></li>
-
-                   @*  <li class="has-sub">
-                        <a href="javascript:void(0)" data-target="#CSC">
-                            CSC যাচাইকৃত আবেদন
-                            <i class="bi bi-chevron-right arrow"></i>
-                        </a>
-                        <ul class="submenu-collapse sub-menu" id="CSC">
-                            <li><a href="/NewApplication/CSCApproved">গৃহীত আবেদন</a></li>
-                            <li><a href="/NewApplication/NewCSCFail">বাতিল আবেদন</a></li>
-                        </ul>
-                    </li> *@
                     <li><a href="/TrainSetup/AddStation">AddStation</a></li>
                     <li><a href="/TrainSetup/TrainRoute">TrainRoute</a></li>
                     <li><a href="/TrainSetup/TrainClass">TrainClass</a></li>
                     <li><a href="/TrainSetup/TrainBogie">TrainBogie</a></li>
                     <li><a href="/TrainSetup/BogieSeat">BogieSeat</a></li>
-                   
                 </ul>
             </li>
 
@@ -190,12 +164,11 @@
         @RenderBody()
     </div>
 
-    <!-- Script -->
+    <!-- Scripts -->
     <script>
-        // Submenu toggle
+        // Submenu toggle (manual click)
         document.querySelectorAll('[data-target]').forEach(menu => {
             menu.addEventListener("click", function () {
-
                 const target = document.querySelector(this.dataset.target);
                 const arrow = this.querySelector(".arrow");
 
@@ -214,6 +187,39 @@
             navbar.classList.toggle("collapsed-navbar");
             content.classList.toggle("content-collapsed");
         }
+
+        // ACTIVE MENU + SUBMENU AUTO OPEN
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const currentPath = window.location.pathname.toLowerCase();
+
+            document.querySelectorAll(".sidebar-menu a").forEach(link => {
+
+                const href = link.getAttribute("href");
+                if (!href || href === "#" || href.includes("javascript")) return;
+
+                if (currentPath === href.toLowerCase()) {
+
+                    // active submenu
+                    link.classList.add("active");
+
+                    // open parent submenu
+                    const subMenu = link.closest(".submenu-collapse");
+                    if (subMenu) {
+                        subMenu.classList.add("show");
+
+                        const parent = subMenu.closest(".has-sub");
+                        if (parent) {
+                            const parentLink = parent.querySelector("a");
+                            const arrow = parent.querySelector(".arrow");
+
+                            if (parentLink) parentLink.classList.add("active");
+                            if (arrow) arrow.classList.add("rotate");
+                        }
+                    }
+                }
+            });
+        });
     </script>
 
 </body>
