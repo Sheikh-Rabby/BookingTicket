@@ -29,7 +29,7 @@ namespace Layout.Controllers
         [HttpPost]
         public async Task<IActionResult> IsActive(string trainId)
         {
-            await _DataRepository.IsActive(trainId);
+            await _DataRepository.UpdateTrainStatus(trainId);
             return Json(new { success = true });
         }
         //station end 
@@ -53,7 +53,7 @@ namespace Layout.Controllers
         [HttpPost]
         public async Task<IActionResult> StationIsActive(string stationId)
         {
-            await _DataRepository.AddStations(stationId);
+            await _DataRepository.UpdateStationStatus(stationId);
             return Json(new { success = true });
         }
         #endregion station
@@ -95,7 +95,7 @@ namespace Layout.Controllers
         [HttpPost]
         public async Task<IActionResult> ClassIsActive(string classID)
         {
-            await _DataRepository.ClassIsActive(classID);
+            await _DataRepository.UpdateClassStatus(classID);
             return Json(new { success = true });
         }
 
@@ -109,7 +109,30 @@ namespace Layout.Controllers
             return View(TrainBogie);
 
         }
+        public async Task<IActionResult> AddTrainBogie(string bogieName)
+        {
+            await _DataRepository.AddTrainBogie(bogieName);
+            return RedirectToAction("TrainBogie");
+        }
 
+        [HttpPost]
+        public async Task<IActionResult> UpdateBogieStatus(string bogieID)
+        {
+            await _DataRepository.UpdateBogieStatus(bogieID);
+            return Json(new { success = true });
+        }
+
+
+        #endregion
+
+        #region bogieSeat
+        public async Task<IActionResult> BogieSeat()
+        {
+
+            var seatlist = await _DataRepository.SeatList();
+            return View(seatlist);
+
+        }
 
 
         #endregion

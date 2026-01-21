@@ -44,7 +44,7 @@ namespace Layout.Data
 
         }
      
-        public async Task IsActive(string trainId)
+        public async Task UpdateTrainStatus(string trainId)
         {
             {
                 using var connection = CreateConnection();
@@ -80,7 +80,7 @@ namespace Layout.Data
                 );
             
         }
-        public async Task StationIsActive(string stationId)
+        public async Task UpdateStationStatus(string stationId)
         {
             using var connection = CreateConnection();
             var stations = await connection.QueryAsync(
@@ -144,7 +144,7 @@ namespace Layout.Data
             return Trainclass;
         }
 
-        public async Task ClassIsActive(string classID)
+        public async Task UpdateClassStatus(string classID)
         {
             using var connection = CreateConnection();
             var stations = await connection.QueryAsync(
@@ -170,6 +170,46 @@ namespace Layout.Data
                 );
             return Trainclass;
         }
+
+        public async Task AddTrainBogie(string bogieName)
+        {
+            using var connection = CreateConnection();
+            var trainBogie = await connection.QueryAsync(
+
+                "dbo.AddTrainBogie", new { bogieName = bogieName },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+        public async Task UpdateBogieStatus(string bogieID)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "dbo.bogieStatusUpdate", new { bogieID = bogieID },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+
+
+        #endregion
+
+
+        #region Seat
+        public async Task<IEnumerable<BogieSeat>> SeatList()
+        {
+            using var connection = CreateConnection();
+            var BogieSeat = await connection.QueryAsync<BogieSeat>(
+
+                "dbo.seatList",
+                commandType: CommandType.StoredProcedure
+                );
+            return BogieSeat;
+        }
+
 
         #endregion
 

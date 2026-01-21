@@ -29,6 +29,13 @@
         public bool? isActive { get; set; }
 
     }
+    public class BogieSeat
+    {
+        public string? seatID { get; set; }
+        public string? seatName { get; set; }
+        public bool? isActive { get; set; }
+
+    }
 
 
 
