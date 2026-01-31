@@ -48,6 +48,19 @@
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
                             <div class="col-2">
+                                <label class="form-label">Train Name<span class="required-star">*</span></label>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-select" id="train-select">
+                                    <option value="">select Train</option>
+                               </select>
+                               
+                            </div>
+                            <input type="hidden" name="trainID" id="trainID" />
+
+                        </div>
+                        <div class="row g-2 mt-2 align-items-center">
+                            <div class="col-2">
                                 <label class="form-label">Bogie Name<span class="required-star">*</span></label>
                             </div>
                             <div class="col-4">
@@ -57,6 +70,7 @@
                                 <button type="submit" class="btn btn-success btn-add">Add Bogie</button>
                             </div>
                         </div>
+                       
                     </div>
                 </form>
             </div>
@@ -70,6 +84,7 @@
     <thead>
         <tr>
             <th>Bogie ID</th>
+            <th>Train ID</th>
             <th>Bogie Name</th>
             <th>Status</th>
         </tr>
@@ -79,6 +94,7 @@
         {
             <tr>
                 <td>@t.bogieID</td>
+                <td>@t.trainID</td>
                 <td>@t.bogieName</td>
                 <td>
                     <div class="form-check form-switch">
@@ -101,6 +117,35 @@
             searching: true,
             ordering:false
         });
+
+        $.ajax({
+             url: '/TrainSetup/RouteTrainList',
+             type:'GET',
+             success:function(response){
+                 var trains= response.data || response;
+                 console.log('train:',trains)
+
+                 $('#train-select').empty()
+
+                 var row=trains.map( t=>`<option value="${t.trainId}">${t.trainName}</option>` ).join('');
+                 $('#train-select').html(`<option value="">select Train</option>`+row);
+
+             }
+
+        });
+
+        $('#train-select').on('change',function(){
+            var trainSelected=$(this).val();
+            console.log(trainSelected)
+            $('#trainID').val(trainSelected);
+
+        });
+
+
+
+
+
+
 
 
         $(document).on("change", ".form-check-input", function() {

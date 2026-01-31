@@ -171,12 +171,12 @@ namespace Layout.Data
             return Trainclass;
         }
 
-        public async Task AddTrainBogie(string bogieName)
+        public async Task AddTrainBogie(string bogieName,string trainID)
         {
             using var connection = CreateConnection();
             var trainBogie = await connection.QueryAsync(
 
-                "dbo.AddTrainBogie", new { bogieName = bogieName },
+                "dbo.AddTrainBogie", new { bogieName = bogieName, trainID= trainID },
                 commandType: CommandType.StoredProcedure
                 );
 

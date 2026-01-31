@@ -1,4 +1,5 @@
 ﻿using Layout.Data;
+using Layout.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Layout.Controllers
@@ -109,9 +110,9 @@ namespace Layout.Controllers
             return View(TrainBogie);
 
         }
-        public async Task<IActionResult> AddTrainBogie(string bogieName)
+        public async Task<IActionResult> AddTrainBogie(string bogieName,string trainID)
         {
-            await _DataRepository.AddTrainBogie(bogieName);
+            await _DataRepository.AddTrainBogie(bogieName, trainID);
             return RedirectToAction("TrainBogie");
         }
 

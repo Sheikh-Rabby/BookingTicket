@@ -16,7 +16,7 @@ namespace Layout.Data
         Task AddTrainClass(string className);
         Task UpdateClassStatus(string classID);
 
-        Task AddTrainBogie(string bogieName);
+        Task AddTrainBogie(string bogieName,string trainID);
         Task<IEnumerable<TrainBogie>> BogieList();
         Task UpdateBogieStatus(string bogieID);
 
