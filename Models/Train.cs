@@ -28,6 +28,7 @@
         public string? trainID { get; set; }
         public string? bogieName { get; set; }
         public bool? isActive { get; set; }
+        public string? trainName { get; set; }
 
     }
     public class BogieSeat

@@ -47,8 +47,23 @@
                 <form asp-controller="TrainSetup" asp-action="AddBogieSeat">
                     <div class="card-body">
                         <div class="row g-2 align-items-center">
+                           
                             <div class="col-2">
-                                <label class="form-label">Train Name<span class="required-star">*</span></label>
+                                <label class="form-label">BogieName<span class="required-star">*</span></label>
+                            </div>
+                            <div class="col-4">
+                                <select class="form-select" id="train-select">
+                                    <option value="">select Bogie</option>
+                                </select>
+
+                            </div>
+
+                        </div>
+                            <input type="hidden" name="trainID" id="trainID" />
+                        <div class="row g-2 align-items-center mt-2">
+
+                            <div class="col-2">
+                                <label class="form-label">Seat Name<span class="required-star">*</span></label>
                             </div>
                             <div class="col-4">
                                 <input name="SeatName" type="text" class="form-control" placeholder="Enter Seat Name" required>

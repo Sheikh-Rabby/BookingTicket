@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Layout.Models.Station>
+﻿@* @model IEnumerable<Layout.Models.Station>
 
 @{
     ViewData["Title"] = "Train List";
@@ -119,5 +119,489 @@
             });
         });
 
+    });
+</script>
+ *@
+@model IEnumerable<Layout.Models.Station>
+
+@{
+    ViewData["Title"] = "Station List";
+}
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+
+<style>
+    /* Main Container Styling */
+    .main-content {
+        padding: 20px;
+        background-color: #f5f7fa;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Card Design */
+    .add-station-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        border: none;
+        margin-bottom: 30px;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        background: linear-gradient(135deg, #2c3e50, #4a6491);
+        color: white;
+        padding: 16px 25px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        border-bottom: none;
+    }
+
+    /* Form Styling */
+    .form-control-custom {
+        border: 1.5px solid #e1e5eb;
+        border-radius: 8px;
+        padding: 10px 15px;
+        transition: all 0.3s;
+        font-size: 14px;
+    }
+
+        .form-control-custom:focus {
+            border-color: #4a6baf;
+            box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.15);
+        }
+
+    .form-label-custom {
+        font-weight: 600;
+        color: #4a5568;
+        font-size: 14px;
+        margin-bottom: 8px;
+    }
+
+    .required-star {
+        color: #e53e3e;
+        margin-left: 3px;
+    }
+
+    /* Button Styling */
+    .btn-add-custom {
+        background: linear-gradient(135deg, #38a169, #48bb78);
+        color: white;
+        border: none;
+        padding: 10px 24px;
+        border-radius: 8px;
+        font-weight: 500;
+        font-size: 14px;
+        transition: all 0.3s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+        .btn-add-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
+            background: linear-gradient(135deg, #2f855a, #38a169);
+        }
+
+    /* Page Title */
+    .page-title {
+        color: #2d3748;
+        font-weight: 700;
+        font-size: 1.8rem;
+        margin-bottom: 25px;
+        padding-bottom: 12px;
+        border-bottom: 3px solid #4a6baf;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    /* Table Styling */
+    .station-table-container {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
+        padding: 0;
+        overflow: hidden;
+    }
+
+    .station-table {
+        width: 100%;
+        margin: 0;
+    }
+
+        .station-table thead {
+            background: linear-gradient(135deg, #4a6baf, #5a7bc5);
+        }
+
+        .station-table th {
+            color: white;
+            font-weight: 600;
+            padding: 16px 20px;
+            font-size: 14px;
+            border: none;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .station-table td {
+            padding: 14px 20px;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            font-size: 14px;
+        }
+
+        .station-table tbody tr {
+            transition: all 0.2s;
+        }
+
+            .station-table tbody tr:hover {
+                background-color: #f8fafc;
+                transform: translateX(2px);
+            }
+
+            .station-table tbody tr:last-child td {
+                border-bottom: none;
+            }
+
+    /* Status Styling */
+    .status-container {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .status-dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-dot-active {
+        background-color: #38a169;
+        box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.2);
+    }
+
+    .status-dot-inactive {
+        background-color: #e53e3e;
+        box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+    }
+
+   
+
+    /* Toggle Switch */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 50px;
+        height: 26px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e2e8f0;
+        transition: .4s;
+        border-radius: 34px;
+    }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+    input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #38a169, #48bb78);
+    }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+    /* Station ID */
+    .station-id {
+        color: #4a5568;
+        font-weight: 600;
+        font-size: 13px;
+        background: #f7fafc;
+        padding: 4px 10px;
+        border-radius: 6px;
+        display: inline-block;
+    }
+
+    /* Station Name */
+    .station-name {
+        color: #2d3748;
+        font-weight: 500;
+        font-size: 15px;
+    }
+
+    /* Success Message */
+    .success-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #38a169;
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        display: none;
+        align-items: center;
+        gap: 10px;
+        z-index: 1000;
+        animation: slideIn 0.3s ease;
+    }
+
+
+    @@keyframes slideIn {
+        from
+
+    {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    }
+
+    /* Responsive Design */
+    @@media (max-width: 768px) {
+        .main-content
+
+    {
+        padding: 15px;
+    }
+
+    .page-title {
+        font-size: 1.5rem;
+    }
+
+    .station-table th,
+    .station-table td {
+        padding: 12px 15px;
+    }
+
+    .btn-add-custom {
+        width: 100%;
+        margin-top: 10px;
+    }
+
+    .status-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    }
+
+    @@media (max-width: 576px) {
+        .station-table
+
+    {
+        font-size: 13px;
+    }
+
+    .station-table th,
+    .station-table td {
+        padding: 10px 12px;
+    }
+
+    }
+</style>
+
+<div class="main-content">
+    <!-- Page Title -->
+    <h1 class="page-title">
+        <i class="fas fa-map-marker-alt"></i> Station Management
+    </h1>
+
+    <!-- Add Station Card -->
+    <div class="add-station-card">
+        <div class="card-header-custom">
+            <i class="fas fa-plus-circle me-2"></i> Add New Station
+        </div>
+        <div class="card-body p-4">
+            <form asp-controller="TrainSetup" asp-action="AddStations">
+                <div class="row align-items-center">
+                    <div class="col-md-8">
+                        <div class="mb-3">
+                            <label class="form-label-custom">Station Name <span class="required-star">*</span></label>
+                            <input name="stationName" type="text" class="form-control form-control-custom"
+                                   placeholder="Enter station name (e.g., New York Central)" required>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn btn-add-custom w-100">
+                            <i class="fas fa-plus"></i> Add Station
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Station List -->
+    <div class="station-table-container">
+        <table class="station-table" id="station-table">
+            <thead>
+                <tr>
+                    <th>Station ID</th>
+                    <th>Station Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var station in Model)
+                {
+                    <tr>
+                        <td>
+                            <span class="station-id">STN-@station.stationId</span>
+                        </td>
+                        <td>
+                            <div class="status-container">
+                              
+                                <div class="d-flex align-items-center">
+                                    <span class="status-dot @(station.isActive == true ? "status-dot-active" : "status-dot-inactive")"></span>
+                                   
+                                </div>
+                                <span class="station-name">@station.stationName</span>
+                            </div>
+                           
+                        </td>
+                        <td>
+                            <div class="status-container">
+                                <label class="toggle-switch">
+                                    <input class="status-toggle" type="checkbox"
+                                           value="@station.stationId" data-name="@station.stationName"
+                                           @(station.isActive == true ? "checked" : "")>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                                
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Success Message -->
+<div class="success-message" id="successMessage">
+    <i class="fas fa-check-circle"></i>
+    <span id="messageText"></span>
+</div>
+
+<!-- JavaScript Libraries -->
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function(){
+        // Initialize DataTable
+        $('#station-table').DataTable({
+            responsive: true,
+            paging: true,
+            pageLength: 10,
+            searching: true,
+            ordering: true,
+            order: [[0, 'asc']],
+            language: {
+                search: "Search stations:",
+                lengthMenu: "Show _MENU_ stations",
+                info: "Showing _START_ to _END_ of _TOTAL_ stations",
+                paginate: {
+                    previous: "<i class='fas fa-chevron-left'></i>",
+                    next: "<i class='fas fa-chevron-right'></i>"
+                }
+            }
+        });
+
+        // Status toggle functionality
+        $(document).on("change", ".status-toggle", function() {
+            var stationId = $(this).val();
+            var stationName = $(this).data('name');
+            var isActive = $(this).is(':checked');
+
+            // Find the row elements
+            var row = $(this).closest('tr');
+            var statusDot = row.find('.status-dot');
+            var statusText = row.find('.status-text');
+
+            // Update visual status
+            if (isActive) {
+                statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
+               
+            } else {
+                statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
+               
+            }
+
+            // Show success message
+            showSuccessMessage('Station "' + stationName + '" has been ' + (isActive ? 'activated' : 'deactivated'));
+
+            // Send AJAX request
+            $.ajax({
+                url: '/TrainSetup/StationIsActive',
+                type: 'POST',
+                data: { stationId: stationId },
+                success: function(res) {
+                    console.log("Station status updated: " + stationId);
+                },
+                error: function(err) {
+                    console.log("Error updating station status", err);
+                    // Revert if error
+                    $(this).prop('checked', !isActive);
+                    if (isActive) {
+                        statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
+                       
+                    } else {
+                        statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
+                       
+                    }
+                    showSuccessMessage('Failed to update station status');
+                }
+            });
+        });
+
+        // Function to show success message
+        function showSuccessMessage(message) {
+            $('#messageText').text(message);
+            $('#successMessage').fadeIn();
+            setTimeout(function() {
+                $('#successMessage').fadeOut();
+            }, 3000);
+        }
+
+       
+       
     });
 </script>
