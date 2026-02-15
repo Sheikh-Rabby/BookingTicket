@@ -1,4 +1,4 @@
-﻿<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+﻿@* <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
@@ -173,6 +173,661 @@
         
         })
   
+
+    });
+</script>
+ *@
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+
+<style>
+    * {
+        font-family: 'Poppins', sans-serif;
+    }
+/* 
+    body {
+        background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+        min-height: 100vh;
+        padding: 20px;
+    } */
+
+    .container {
+        max-width: 900px;
+    }
+
+    /* Main Card */
+    .card {
+        border-radius: 20px !important;
+        overflow: hidden;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08) !important;
+        border: none !important;
+        animation: slideUp 0.5s ease;
+    }
+
+    @@keyframes slideUp {
+        from
+
+    {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    }
+
+    /* Card Header */
+    .card-header {
+        background: linear-gradient(135deg, #667eea, #764ba2) !important;
+        padding: 20px !important;
+        border-bottom: none !important;
+    }
+
+        .card-header h5 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .card-header i {
+            font-size: 1.8rem;
+        }
+
+    /* Card Body */
+    .card-body {
+        padding: 30px !important;
+        background: white;
+    }
+
+    /* Label Styling */
+    .form-label {
+        font-weight: 600;
+        color: #2d3748;
+        font-size: 0.95rem;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+        .form-label i {
+            color: #667eea;
+        }
+
+    /* Select Styling */
+    .form-select {
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        color: #1e293b;
+        background-color: #f8fafc;
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+
+        .form-select:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background-color: white;
+            outline: none;
+        }
+
+        .form-select:hover {
+            border-color: #764ba2;
+            background-color: white;
+        }
+
+    /* Route List Container */
+    #TrainRoute {
+        background: #f8fafc;
+        border-radius: 16px;
+        padding: 20px;
+        margin: 20px 0;
+        border: 2px dashed #e2e8f0;
+        max-height: 400px;
+        overflow-y: auto;
+    }
+
+        /* Custom Scrollbar */
+        #TrainRoute::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        #TrainRoute::-webkit-scrollbar-track {
+            background: #e2e8f0;
+            border-radius: 10px;
+        }
+
+        #TrainRoute::-webkit-scrollbar-thumb {
+            background: #a0aec0;
+            border-radius: 10px;
+        }
+
+            #TrainRoute::-webkit-scrollbar-thumb:hover {
+                background: #718096;
+            }
+
+    /* Route Row */
+    .routerow {
+        background: white;
+        border-radius: 12px !important;
+        padding: 15px !important;
+        margin-bottom: 12px !important;
+        border: 1px solid #e2e8f0;
+        transition: all 0.3s;
+        animation: fadeIn 0.3s ease;
+        display: flex;
+        align-items: center;
+    }
+
+    @@keyframes fadeIn {
+        from
+
+    {
+        opacity: 0;
+        transform: translateX(-10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    }
+
+    .routerow:hover {
+        background: white !important;
+        border-color: #667eea;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+        transform: translateX(5px);
+    }
+
+    /* Input Field */
+    .routerow .form-control {
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 0.95rem;
+        transition: all 0.3s;
+        background: #f8fafc;
+    }
+
+        .routerow .form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+            background: white;
+            outline: none;
+        }
+
+        .routerow .form-control::placeholder {
+            color: #a0aec0;
+            font-size: 0.9rem;
+        }
+
+    /* Remove Button */
+    .routerow .btn-outline-danger {
+        border: 2px solid #e2e8f0;
+        background: white;
+        color: #ef4444;
+        padding: 8px 16px;
+        border-radius: 10px;
+        font-size: 0.9rem;
+        transition: all 0.3s;
+    }
+
+        .routerow .btn-outline-danger:hover {
+            background: #ef4444;
+            border-color: #ef4444;
+            color: white;
+           /*  transform: rotate(90deg); */
+        }
+
+        .routerow .btn-outline-danger i {
+            font-size: 1.1rem;
+        }
+
+    /* Buttons Container */
+    .d-flex.gap-2 {
+        gap: 15px !important;
+        margin-top: 25px !important;
+    }
+
+    /* Add Route Button */
+    .btn-outline-primary {
+        border: 2px solid #667eea;
+        background: white;
+        color: #667eea;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        flex: 1;
+    }
+
+        .btn-outline-primary:hover {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-color: transparent;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-outline-primary i {
+            font-size: 1.1rem;
+        }
+
+    /* Save Route Button */
+    .btn-success {
+        background: linear-gradient(135deg, #10b981, #059669);
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s;
+        flex: 1;
+    }
+
+        .btn-success:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-success i {
+            font-size: 1.1rem;
+        }
+
+    /* Empty State Styling */
+    #TrainRoute:empty::before {
+        content: 'No stations added yet';
+        display: block;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 0.95rem;
+        padding: 30px;
+        font-style: italic;
+    }
+
+    .route-number {
+        min-height: 50px;
+        min-width: 30px;
+        background: #1e293b;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 10px;
+    }
+
+    /* Toast Message */
+    .toast-notification {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        color: #1e293b;
+        padding: 15px 25px;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        display: none;
+        align-items: center;
+        gap: 12px;
+        z-index: 9999;
+        border-left: 4px solid;
+        animation: slideIn 0.3s ease;
+    }
+
+        .toast-notification.success {
+            border-left-color: #10b981;
+        }
+
+        .toast-notification.error {
+            border-left-color: #ef4444;
+        }
+
+        .toast-notification i {
+            font-size: 1.3rem;
+        }
+
+        .toast-notification.success i {
+            color: #10b981;
+        }
+
+        .toast-notification.error i {
+            color: #ef4444;
+        }
+
+    @@keyframes slideIn {
+        from
+
+    {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .card-body
+
+    {
+        padding: 20px !important;
+    }
+
+    .routerow {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+        .routerow .col-md-6,
+        .routerow .col-md-2 {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+
+        .routerow .text-end {
+            text-align: left !important;
+        }
+
+    .d-flex.gap-2 {
+        flex-direction: column;
+    }
+
+    .btn-outline-primary,
+    .btn-success {
+        width: 100%;
+    }
+
+    .toast-notification {
+        left: 20px;
+        right: 20px;
+    }
+    }
+       
+    
+</style>
+
+<!-- Toast Notification -->
+<div class="toast-notification" id="toastNotification">
+    <i class="bi" id="toastIcon"></i>
+    <span id="toastMessage"></span>
+</div>
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+
+        <!-- Header -->
+        <div class="card-header bg-primary text-white text-center">
+            <h5 class="mb-0 fw-bold">
+                <i class="bi bi-train-front me-2"></i>Train Route Management
+            </h5>
+        </div>
+
+        <!-- Body -->
+        <div class="card-body">
+
+            <!-- Train Select -->
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label class="form-label fw-semibold">
+                        <i class="bi bi-train-front"></i>
+                        Select Train
+                    </label>
+                    <select class="form-select" id="trainSelect">
+                        <option value="">Choose a train...</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Route List -->
+            <div id="TrainRoute">
+                <!-- Initial row will be added by JavaScript if needed -->
+            </div>
+
+            <!-- Buttons -->
+            <div class="d-flex gap-2 mt-3">
+                <button class="btn btn-outline-primary" id="addroute">
+                    <i class="bi bi-plus-circle me-1"></i>Add Station
+                </button>
+
+                <button class="btn btn-success" id="saveroute">
+                    <i class="bi bi-save me-1"></i>Save Route
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        /* ===============================
+           1️⃣ Load Train List
+        =============================== */
+        loadTrains();
+
+        function loadTrains() {
+            $.ajax({
+                url: '/TrainSetup/RouteTrainList',
+                type: 'GET',
+                success: function (response) {
+
+                    var trains = response.data || response || [];
+                    var options = '<option value="">Choose a train...</option>';
+
+                    if (trains.length > 0) {
+                        trains.forEach(function (train) {
+                            options += `<option value="${train.trainId}">
+                                            ${train.trainName}
+                                        </option>`;
+                        });
+                    } else {
+                        options += '<option disabled>No trains available</option>';
+                    }
+
+                    $('#trainSelect').html(options);
+                },
+                error: function () {
+                    $('#trainSelect').html('<option>Error loading trains</option>');
+                    showToast('Failed to load trains', 'error');
+                }
+            });
+        }
+
+        /* ===============================
+           2️⃣ Train Select Change
+        =============================== */
+        $('#trainSelect').on('change', function () {
+            var trainName = $(this).find('option:selected').text();
+            if ($(this).val()) {
+                showToast('Selected: ' + trainName, 'success');
+            }
+        });
+
+        /* ===============================
+           3️⃣ Add Route Row
+        =============================== */
+        $('#addroute').click(function () {
+
+            var trainId = $('#trainSelect').val();
+
+            if (!trainId) {
+                showToast('Please select a train first', 'error');
+                $('#trainSelect').focus();
+                return;
+            }
+
+            var nextNumber = $('.route-number').length + 1;
+
+            $('#TrainRoute').append(`
+                <div class="row align-items-center mb-2 routerow">
+                    <div class="route-number col-md-1">${nextNumber}</div>
+
+                    <div class="col-md-9">
+                        <input type="text"
+                               class="form-control station-input"
+                               placeholder="Enter Station Name">
+                    </div>
+
+                    <div class="col-md-2 text-end">
+                        <button type="button"
+                                class="btn btn-outline-danger remove">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `);
+
+            $('#TrainRoute .routerow:last-child input').focus();
+        });
+
+        /* ===============================
+           4️⃣ Remove Route Row
+        =============================== */
+        $(document).on('click', '.remove', function () {
+
+            $(this).closest('.routerow').fadeOut(200, function () {
+                $(this).remove();
+                reNumberRoutes();
+            });
+
+        });
+
+        function reNumberRoutes() {
+            $('.route-number').each(function (index) {
+                $(this).text(index + 1);
+            });
+        }
+
+        /* ===============================
+           5️⃣ Save Route
+        =============================== */
+        $('#saveroute').click(function () {
+
+            var trainId = $('#trainSelect').val();
+
+            if (!trainId) {
+                showToast("Please select a train", "error");
+                return;
+            }
+
+            var routeList = [];
+            var isValid = true;
+
+            $('#TrainRoute .routerow').each(function (index) {
+
+                var input = $(this).find('.station-input');
+                var stationName = input.val().trim();
+
+                if (stationName === "") {
+                    input.focus();
+                    input.css('border-color', '#ef4444');
+                    showToast("Please enter station name for row " + (index + 1), "error");
+                    isValid = false;
+                    return false;
+                }
+
+                if (stationName.length < 3) {
+                    input.focus();
+                    input.css('border-color', '#ef4444');
+                    showToast("Station name must be at least 3 characters", "error");
+                    isValid = false;
+                    return false;
+                }
+
+                input.css('border-color', '#e2e8f0');
+
+                routeList.push({
+                    stationName: stationName,
+                    orderNo: index + 1
+                });
+            });
+
+            if (!isValid) return;
+
+            if (routeList.length === 0) {
+                showToast("Please add at least one station", "error");
+                return;
+            }
+
+            $.ajax({
+                url: '/TrainSetup/AddRoute',
+                type: 'POST',
+                data: {
+                    trainId: trainId,
+                    routeList: JSON.stringify(routeList)
+                },
+                success: function () {
+
+                    showToast("Route added successfully!", "success");
+
+                    $('#TrainRoute').empty();
+                    $('#trainSelect').val('');
+
+                    setTimeout(function () {
+                        window.location.href = '/TrainSetup/TrainRoute';
+                    }, 1200);
+                },
+                error: function () {
+                    showToast("Failed to save route. Please try again.", "error");
+                }
+            });
+
+        });
+
+        /* ===============================
+           6️⃣ Auto Add First Row
+        =============================== */
+        
+
+        /* ===============================
+           7️⃣ Toast Function
+        =============================== */
+        function showToast(message, type = 'success') {
+
+            $('#toastMessage').text(message);
+            $('#toastNotification').removeClass('success error');
+
+            if (type === 'success') {
+                $('#toastNotification').addClass('success');
+                $('#toastIcon').removeClass().addClass('bi bi-check-circle-fill');
+            } else {
+                $('#toastNotification').addClass('error');
+                $('#toastIcon').removeClass().addClass('bi bi-exclamation-circle-fill');
+            }
+
+            $('#toastNotification')
+                .stop(true, true)
+                .fadeIn()
+                .delay(2500)
+                .fadeOut();
+        }
 
     });
 </script>
