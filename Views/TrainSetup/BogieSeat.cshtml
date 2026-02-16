@@ -538,22 +538,7 @@
             }
         });
 
-        // Load bogies dropdown (adjust URL and property names as needed)
-        $.ajax({
-            url: '/TrainSetup/GetBogies',  // Change to your actual endpoint
-            type: 'GET',
-            success: function(response) {
-                var bogies = response.data || response;
-                console.log('bogies:', bogies);
-
-                var options = '<option value="">Select Bogie</option>';
-                bogies.forEach(function(b) {
-                    // Assuming each bogie has bogieID and bogieName properties
-                    options += `<option value="${b.bogieID}">${b.bogieName}</option>`;
-                });
-                $('#bogie-select').html(options);
-            }
-        });
+   
 
         // Update hidden field when bogie changes
         $('#bogie-select').on('change', function() {
@@ -599,7 +584,29 @@
             });
         });
 
-        function showSuccessMessage(message) {
+
+        $.ajax({
+            url:'/TrainSetup/BogieForSeat',
+            type:'GET',
+            success:function(response){
+              var bogies= response.data || response
+              console.log(bogies)
+                var option='<option value="">Select Bogie</option>'
+
+                bogies.forEach(function(b){
+                       option+=`<option value="${b.bogieID}">${b.bogieName}</option>`
+                })
+                 $('#bogie-select').html(option);
+            }
+        })
+
+          $('#bogie-select').on('change',function(){
+              var selected =$(this).val();
+              console.log(selected);
+               $('#bogieID').val(selected)
+         })
+
+   function showSuccessMessage(message) {
             $('#messageText').text(message);
             $('#successMessage').fadeIn();
             setTimeout(function() {

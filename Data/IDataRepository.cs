@@ -20,7 +20,7 @@ namespace Layout.Data
         Task<IEnumerable<TrainBogie>> BogieList();
         Task UpdateBogieStatus(string bogieID);
 
-        Task AddBogieSeat(string seatName);
+        Task AddBogieSeat(string bogieID, string seatName);
         Task<IEnumerable<BogieSeat>> SeatList();
         Task UpdateSeatStatus(string seatID);
 

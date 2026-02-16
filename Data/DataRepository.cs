@@ -213,12 +213,12 @@ namespace Layout.Data
         }
 
 
-        public async Task AddBogieSeat(string seatName)
+        public async Task AddBogieSeat(string bogieID, string seatName)
         {
             using var connection = CreateConnection();
             var trainBogie = await connection.QueryAsync(
 
-                "dbo.AddBogieSeat", new { seatName = seatName },
+                "dbo.AddBogieSeat", new { bogieID = bogieID, seatName = seatName },
                 commandType: CommandType.StoredProcedure
                 );
 

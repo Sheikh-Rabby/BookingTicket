@@ -136,6 +136,12 @@ namespace Layout.Controllers
             return View(TrainBogie);
 
         }
+        public async Task<IActionResult> BogieForSeat()
+        {
+            var TrainBogie = await _DataRepository.BogieList();
+            return Json(new {success=true, data = TrainBogie });
+
+        }
         public async Task<IActionResult> AddTrainBogie(string bogieName,string trainID)
         {
             await _DataRepository.AddTrainBogie(bogieName, trainID);
@@ -161,9 +167,9 @@ namespace Layout.Controllers
 
         }
 
-        public async Task<IActionResult> AddBogieSeat(string seatName)
+        public async Task<IActionResult> AddBogieSeat( string bogieID, string seatName)
         {
-            await _DataRepository.AddBogieSeat(seatName);
+            await _DataRepository.AddBogieSeat(bogieID, seatName);
             return RedirectToAction("BogieSeat");
         }
 
