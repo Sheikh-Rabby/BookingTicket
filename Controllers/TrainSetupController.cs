@@ -24,7 +24,17 @@ namespace Layout.Controllers
         [HttpPost]  
          public async Task<IActionResult> AddTrains(string trainName)
         {
-            await _DataRepository.AddTrains(trainName);
+           var result= await _DataRepository.AddTrains(trainName);
+
+            if(!string.IsNullOrEmpty(result.MsgSuccess))
+            {
+                TempData["MsgSuccess"] = result.MsgSuccess;
+            }
+            else
+            {
+                TempData["MsgFail"] = result.MsgFail;
+            }
+
             return RedirectToAction("AddTrain");
         }
         [HttpPost]
@@ -47,7 +57,23 @@ namespace Layout.Controllers
         [HttpPost]
         public async Task<IActionResult> AddStations(string stationName)
         {
-            await _DataRepository.AddStations(stationName);
+           
+            var result= await _DataRepository.AddStations(stationName);
+            if (!string.IsNullOrEmpty(result.MsgSuccess))
+            {
+                TempData["MsgSuccess"] = result.MsgSuccess;
+            }
+            else
+            {
+                TempData["MsgFail"] = result.MsgFail;
+
+            }
+
+
+
+
+                
+            
             return RedirectToAction("AddStation");
         }
 

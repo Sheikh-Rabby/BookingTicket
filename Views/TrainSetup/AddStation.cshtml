@@ -1,128 +1,4 @@
-﻿@* @model IEnumerable<Layout.Models.Station>
-
-@{
-    ViewData["Title"] = "Train List";
-}
-
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/switchery@0.8.2/switchery.min.css" />
-
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/switchery@0.8.2/switchery.min.js"></script>
-
-<style>
-    .card {
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    }
-
-    .form-label {
-        font-weight: 500;
-        margin-right: 5px;
-        margin-bottom: 0;
-    }
-
-    .required-star {
-        color: red;
-        margin-left: 2px;
-    }
-
-    .btn-add {
-        white-space: nowrap;
-    }
-</style>
-
-<div class="mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-center bg-primary text-white fs-5 fw-bold">
-                    Add Station
-                </div>
-                <form asp-controller="TrainSetup" asp-action="AddStations">
-                    <div class="card-body">
-                        <div class="row g-2 align-items-center">
-                            <div class="col-2">
-                                <label class="form-label">Train Name<span class="required-star">*</span></label>
-                            </div>
-                            <div class="col-4">
-                                <input name="stationName" type="text" class="form-control" placeholder="Enter Station Name" required>
-                            </div>
-                            <div class="col-4">
-                                <button type="submit" class="btn btn-success btn-add">Add Station</button>
-                            </div>
-                        </div>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h2 class="mt-3 mb-3">Station List</h2>
-
-<table class="table table-bordered table-striped" id="station-table">
-    <thead>
-        <tr>
-            <th>Station ID</th>
-            <th>Station Name</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var t in Model)
-        {
-            <tr>
-                <td>@t.stationId</td>
-                <td>@t.stationName</td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" value="@t.stationId"
-                               @(t.isActive == true ? "checked" : "")>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
-
-<script>
-    $(document).ready(function(){
-
-
-        $('#station-table').DataTable({
-            responsive: true,
-            paging: true,
-            searching: true,
-            ordering:false
-        });
-
-
-        $(document).on("change", ".form-check-input", function() {
-            var stationId = $(this).val();
-
-            $.ajax({
-                url: '/TrainSetup/StationIsActive',
-                type: 'POST',
-                data: { stationId: stationId },
-                success: function(res) {
-                    console.log("TrainId sent: " + stationId);
-                },
-                error: function(err) {
-                    console.log("Error sending TrainId", err);
-                }
-            });
-        });
-
-    });
-</script>
- *@
-@model IEnumerable<Layout.Models.Station>
+﻿@model IEnumerable<Layout.Models.Station>
 
 @{
     ViewData["Title"] = "Station List";
@@ -130,54 +6,68 @@
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
 <style>
-    /* Main Container Styling */
+    /* Modern, clean styling */
+    body {
+        background: #f8fafc;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
     .main-content {
-        padding: 20px;
-        background-color: #f5f7fa;
+        padding: 2rem;
         min-height: calc(100vh - 60px);
     }
 
-    /* Card Design */
+    /* Page Title */
+    .page-title {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #4f46e5;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .page-title i {
+            color: #4f46e5;
+        }
+
+    /* Add Station Card – modern minimal */
     .add-station-card {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-        border: none;
-        margin-bottom: 30px;
+        border-radius: 24px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+        border: 1px solid #f0f2f5;
+        margin-bottom: 2.5rem;
         overflow: hidden;
     }
 
     .card-header-custom {
-        background: linear-gradient(135deg, #2c3e50, #4a6491);
-        color: white;
-        padding: 16px 25px;
+        padding: 1.25rem 1.5rem;
+        background: #ffffff;
+        border-bottom: 1px solid #f1f5f9;
         font-weight: 600;
+        color: #1e293b;
         font-size: 1.1rem;
-        border-bottom: none;
     }
 
-    /* Form Styling */
-    .form-control-custom {
-        border: 1.5px solid #e1e5eb;
-        border-radius: 8px;
-        padding: 10px 15px;
-        transition: all 0.3s;
-        font-size: 14px;
+    .card-body {
+        padding: 1.5rem;
     }
 
-        .form-control-custom:focus {
-            border-color: #4a6baf;
-            box-shadow: 0 0 0 3px rgba(74, 107, 175, 0.15);
-        }
-
+    /* Form styling */
     .form-label-custom {
-        font-weight: 600;
-        color: #4a5568;
-        font-size: 14px;
-        margin-bottom: 8px;
+        font-weight: 500;
+        color: #334155;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: block;
     }
 
     .required-star {
@@ -185,121 +75,189 @@
         margin-left: 3px;
     }
 
-    /* Button Styling */
-    .btn-add-custom {
-        background: linear-gradient(135deg, #38a169, #48bb78);
-        color: white;
-        border: none;
-        padding: 10px 24px;
-        border-radius: 8px;
-        font-weight: 500;
-        font-size: 14px;
-        transition: all 0.3s;
+    .input-group-custom {
+        position: relative;
         display: flex;
         align-items: center;
+    }
+
+        .input-group-custom i {
+            position: absolute;
+            left: 1rem;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.8rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #ffffff;
+    }
+
+        .form-control-custom:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+            outline: none;
+        }
+
+    /* Add button */
+    .btn-add-custom {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        border: none;
+        border-radius: 16px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(79,70,229,0.2);
+        display: inline-flex;
+        align-items: center;
         justify-content: center;
-        gap: 8px;
+        gap: 0.5rem;
     }
 
         .btn-add-custom:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(56, 161, 105, 0.3);
-            background: linear-gradient(135deg, #2f855a, #38a169);
+            box-shadow: 0 8px 15px rgba(79,70,229,0.3);
         }
 
-    /* Page Title */
-    .page-title {
-        color: #2d3748;
-        font-weight: 700;
-        font-size: 1.8rem;
-        margin-bottom: 25px;
-        padding-bottom: 12px;
-        border-bottom: 3px solid #4a6baf;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+        .btn-add-custom i {
+            font-size: 1rem;
+        }
 
-    /* Table Styling */
+    /* Table Container */
     .station-table-container {
         background: white;
-        border-radius: 12px;
-        box-shadow: 0 3px 15px rgba(0, 0, 0, 0.08);
-        padding: 0;
+        border-radius: 24px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+        border: 1px solid #f0f2f5;
         overflow: hidden;
+        padding: 1rem;
     }
 
+    /* DataTable wrapper adjustments */
+    .dataTables_wrapper {
+        padding: 0;
+    }
+
+    /* Buttons styling - match modern design */
+    .dt-buttons {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dt-button {
+        background: white !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 40px !important;
+        padding: 0.5rem 1.2rem !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        color: #334155 !important;
+        transition: all 0.15s !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+    }
+
+        .dt-button:hover {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
+        }
+
+        .dt-button i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+    /* Table itself */
     .station-table {
-        width: 100%;
-        margin: 0;
+        width: 100% !important;
+        border-collapse: separate;
+        border-spacing: 0;
     }
 
-        .station-table thead {
-            background: linear-gradient(135deg, #4a6baf, #5a7bc5);
-        }
-
-        .station-table th {
-            color: white;
+        .station-table thead th {
+            background: #f8fafc;
+            color: #1e293b;
             font-weight: 600;
-            padding: 16px 20px;
-            font-size: 14px;
-            border: none;
+            font-size: 0.9rem;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.05em;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
         }
 
-        .station-table td {
-            padding: 14px 20px;
+        .station-table tbody td {
+            padding: 1rem 1.5rem;
             border-bottom: 1px solid #f1f5f9;
             vertical-align: middle;
-            font-size: 14px;
+            color: #334155;
         }
 
-        .station-table tbody tr {
-            transition: all 0.2s;
+        .station-table tbody tr:last-child td {
+            border-bottom: none;
         }
 
-            .station-table tbody tr:hover {
-                background-color: #f8fafc;
-                transform: translateX(2px);
-            }
+        .station-table tbody tr:hover {
+            background-color: #f8fafc;
+            transition: background 0.2s;
+        }
 
-            .station-table tbody tr:last-child td {
-                border-bottom: none;
-            }
+    /* Station ID badge */
+    .station-id {
+        background: #eef2ff;
+        color: #4f46e5;
+        font-weight: 600;
+        padding: 0.35rem 1rem;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
 
-    /* Status Styling */
+    /* Status container */
     .status-container {
         display: flex;
         align-items: center;
-        gap: 12px;
+        gap: 1rem;
     }
 
     .status-dot {
-        width: 12px;
-        height: 12px;
+        width: 10px;
+        height: 10px;
         border-radius: 50%;
         display: inline-block;
     }
 
     .status-dot-active {
-        background-color: #38a169;
-        box-shadow: 0 0 0 3px rgba(56, 161, 105, 0.2);
+        background-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
     }
 
     .status-dot-inactive {
-        background-color: #e53e3e;
-        box-shadow: 0 0 0 3px rgba(229, 62, 62, 0.2);
+        background-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
     }
 
-   
+    .station-name {
+        font-weight: 500;
+        color: #0f172a;
+    }
 
-    /* Toggle Switch */
+    /* Toggle switch */
     .toggle-switch {
         position: relative;
         display: inline-block;
-        width: 50px;
-        height: 26px;
+        width: 48px;
+        height: 24px;
     }
 
         .toggle-switch input {
@@ -316,7 +274,7 @@
         right: 0;
         bottom: 0;
         background-color: #e2e8f0;
-        transition: .4s;
+        transition: .3s;
         border-radius: 34px;
     }
 
@@ -325,58 +283,39 @@
             content: "";
             height: 18px;
             width: 18px;
-            left: 4px;
-            bottom: 4px;
+            left: 3px;
+            bottom: 3px;
             background-color: white;
-            transition: .4s;
+            transition: .3s;
             border-radius: 50%;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
     input:checked + .toggle-slider {
-        background: linear-gradient(135deg, #38a169, #48bb78);
+        background: linear-gradient(135deg, #10b981, #34d399);
     }
 
         input:checked + .toggle-slider:before {
             transform: translateX(24px);
         }
 
-    /* Station ID */
-    .station-id {
-        color: #4a5568;
-        font-weight: 600;
-        font-size: 13px;
-        background: #f7fafc;
-        padding: 4px 10px;
-        border-radius: 6px;
-        display: inline-block;
-    }
-
-    /* Station Name */
-    .station-name {
-        color: #2d3748;
-        font-weight: 500;
-        font-size: 15px;
-    }
-
-    /* Success Message */
+    /* Success message */
     .success-message {
         position: fixed;
         top: 20px;
         right: 20px;
-        background: #38a169;
+        background: #10b981;
         color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        padding: 0.75rem 1.5rem;
+        border-radius: 40px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         display: none;
         align-items: center;
-        gap: 10px;
+        gap: 0.75rem;
         z-index: 1000;
+        font-weight: 500;
         animation: slideIn 0.3s ease;
     }
-
-
     @@keyframes slideIn {
         from
 
@@ -392,46 +331,29 @@
 
     }
 
-    /* Responsive Design */
+    /* Responsive */
     @@media (max-width: 768px) {
         .main-content
 
     {
-        padding: 15px;
+        padding: 1rem;
     }
 
     .page-title {
-        font-size: 1.5rem;
+        font-size: 1.6rem;
     }
 
-    .station-table th,
-    .station-table td {
-        padding: 12px 15px;
+    .station-table thead th,
+    .station-table tbody td {
+        padding: 0.75rem 1rem;
     }
 
     .btn-add-custom {
         width: 100%;
-        margin-top: 10px;
     }
 
-    .status-container {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 6px;
-    }
-
-    }
-
-    @@media (max-width: 576px) {
-        .station-table
-
-    {
-        font-size: 13px;
-    }
-
-    .station-table th,
-    .station-table td {
-        padding: 10px 12px;
+    .dt-buttons {
+        justify-content: center;
     }
 
     }
@@ -446,20 +368,21 @@
     <!-- Add Station Card -->
     <div class="add-station-card">
         <div class="card-header-custom">
-            <i class="fas fa-plus-circle me-2"></i> Add New Station
+            <i class="fas fa-plus-circle me-2" style="color:#4f46e5;"></i> Add New Station
         </div>
-        <div class="card-body p-4">
+        <div class="card-body">
             <form asp-controller="TrainSetup" asp-action="AddStations">
-                <div class="row align-items-center">
+                <div class="row g-4 align-items-end">
                     <div class="col-md-8">
-                        <div class="mb-3">
-                            <label class="form-label-custom">Station Name <span class="required-star">*</span></label>
-                            <input name="stationName" type="text" class="form-control form-control-custom"
-                                   placeholder="Enter station name (e.g., New York Central)" required>
+                        <label class="form-label-custom">Station Name <span class="required-star">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <input name="stationName" type="text" class="form-control-custom"
+                                   placeholder="Enter Station Name" required>
                         </div>
                     </div>
                     <div class="col-md-4">
-                        <button type="submit" class="btn btn-add-custom w-100">
+                        <button type="submit" class="btn-add-custom w-100">
                             <i class="fas fa-plus"></i> Add Station
                         </button>
                     </div>
@@ -482,30 +405,20 @@
                 @foreach (var station in Model)
                 {
                     <tr>
-                        <td>
-                            <span class="station-id">STN-@station.stationId</span>
-                        </td>
+                        <td><span class="station-id">STN-@station.stationId</span></td>
                         <td>
                             <div class="status-container">
-                              
-                                <div class="d-flex align-items-center">
-                                    <span class="status-dot @(station.isActive == true ? "status-dot-active" : "status-dot-inactive")"></span>
-                                   
-                                </div>
+                                <span class="status-dot @(station.isActive == true ? "status-dot-active" : "status-dot-inactive")"></span>
                                 <span class="station-name">@station.stationName</span>
                             </div>
-                           
                         </td>
                         <td>
-                            <div class="status-container">
-                                <label class="toggle-switch">
-                                    <input class="status-toggle" type="checkbox"
-                                           value="@station.stationId" data-name="@station.stationName"
-                                           @(station.isActive == true ? "checked" : "")>
-                                    <span class="toggle-slider"></span>
-                                </label>
-                                
-                            </div>
+                            <label class="toggle-switch">
+                                <input class="status-toggle" type="checkbox"
+                                       value="@station.stationId" data-name="@station.stationName"
+                                       @(station.isActive == true ? "checked" : "")>
+                                <span class="toggle-slider"></span>
+                            </label>
                         </td>
                     </tr>
                 }
@@ -523,10 +436,17 @@
 <!-- JavaScript Libraries -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+<!-- DataTables Buttons and dependencies -->
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 <script>
     $(document).ready(function(){
-        // Initialize DataTable
+        // Initialize DataTable with export buttons and scrollable feature
         $('#station-table').DataTable({
             responsive: true,
             paging: true,
@@ -534,8 +454,40 @@
             searching: true,
             ordering: true,
             order: [[0, 'asc']],
+            scrollY: "400px",        // Enables vertical scrolling
+            scrollCollapse: true,     // Keeps the container height even when few rows
+            dom: 'Bfrtip',            // Add Buttons container
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Copy',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'dt-button',
+                    orientation: 'portrait',
+                    pageSize: 'A4'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print"></i> Print',
+                    className: 'dt-button'
+                }
+            ],
             language: {
-                search: "Search stations:",
+                search: "🔍 Search stations:",
                 lengthMenu: "Show _MENU_ stations",
                 info: "Showing _START_ to _END_ of _TOTAL_ stations",
                 paginate: {
@@ -545,30 +497,22 @@
             }
         });
 
-        // Status toggle functionality
+        // Status toggle functionality (unchanged)
         $(document).on("change", ".status-toggle", function() {
             var stationId = $(this).val();
             var stationName = $(this).data('name');
             var isActive = $(this).is(':checked');
-
-            // Find the row elements
             var row = $(this).closest('tr');
             var statusDot = row.find('.status-dot');
-            var statusText = row.find('.status-text');
 
-            // Update visual status
             if (isActive) {
                 statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
-               
             } else {
                 statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
-               
             }
 
-            // Show success message
             showSuccessMessage('Station "' + stationName + '" has been ' + (isActive ? 'activated' : 'deactivated'));
 
-            // Send AJAX request
             $.ajax({
                 url: '/TrainSetup/StationIsActive',
                 type: 'POST',
@@ -578,21 +522,18 @@
                 },
                 error: function(err) {
                     console.log("Error updating station status", err);
-                    // Revert if error
+                    // Revert UI on error
                     $(this).prop('checked', !isActive);
                     if (isActive) {
                         statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
-                       
                     } else {
                         statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
-                       
                     }
                     showSuccessMessage('Failed to update station status');
                 }
             });
         });
 
-        // Function to show success message
         function showSuccessMessage(message) {
             $('#messageText').text(message);
             $('#successMessage').fadeIn();
@@ -600,8 +541,5 @@
                 $('#successMessage').fadeOut();
             }, 3000);
         }
-
-       
-       
     });
 </script>

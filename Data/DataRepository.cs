@@ -33,14 +33,15 @@ namespace Layout.Data
 
         }
         
-        public async Task AddTrains(string trainName)
+        public async Task<ResponseSms> AddTrains(string trainName)
         {
             using var connection = CreateConnection();
-            var trains = await connection.QueryAsync(
+            var result = await connection.QueryFirstOrDefaultAsync<ResponseSms>(
                 "dbo.AddTrain", new { trainName = trainName },
                 commandType:CommandType.StoredProcedure
                 
                 );
+            return result;
 
         }
      
@@ -70,14 +71,15 @@ namespace Layout.Data
             return stations;
         }
 
-        public async Task AddStations(string stationName)
+        public async Task<ResponseSms> AddStations(string stationName)
         {
             using var connection = CreateConnection();
-            var stations = await connection.QueryAsync(
+            var stations = await connection.QueryFirstOrDefaultAsync<ResponseSms>(
 
                 "dbo.AddStation", new { stationName = stationName },
                 commandType: CommandType.StoredProcedure
                 );
+            return stations;
             
         }
         public async Task UpdateStationStatus(string stationId)

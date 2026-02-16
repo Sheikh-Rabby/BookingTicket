@@ -5,10 +5,10 @@ namespace Layout.Data
     public interface IDataRepository
     {
         Task<IEnumerable<Train>> TrainList();
-        Task AddTrains(string trainName);
+        Task<ResponseSms> AddTrains(string trainName);
         Task UpdateTrainStatus(string trainId);
         Task<IEnumerable<Station>> StationList();
-        Task AddStations(string stationName);
+        Task<ResponseSms> AddStations(string stationName);
         Task UpdateStationStatus(string stationId);
         Task<IEnumerable<Train>> RouteTrainList();
         Task AddRoute(string trainId, string routeList);

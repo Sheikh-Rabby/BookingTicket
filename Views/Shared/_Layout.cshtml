@@ -1,231 +1,4 @@
-﻿@* <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Train Ticket Booking</title>
-
-    <!-- Bootstrap CSS & Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
-
-    <style>
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background: linear-gradient(180deg, #143056, #0d1e36);
-            height: 100vh;
-            position: fixed;
-            top: 0;
-            left: 0;
-            padding-top: 20px;
-            color: white;
-            overflow-y: auto;
-            transition: width 0.3s ease;
-            z-index: 9999;
-        }
-
-            .sidebar.collapsed {
-                width: 80px !important;
-            }
-
-        /* Navbar collapsed */
-        .collapsed-navbar {
-            margin-left: 80px !important;
-        }
-
-        /* Content collapsed */
-        .content-collapsed {
-            margin-left: 100px !important;
-        }
-
-        .sidebar-menu,
-        .sub-menu {
-            list-style: none;
-            padding-left: 0;
-            font-size: 12px;
-        }
-
-            .sidebar-menu li > a {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 6px 20px;
-                border-radius: 4px;
-                font-size: 12px;
-                color: white;
-                text-decoration: none;
-                transition: background 0.3s;
-            }
-
-            .sidebar-menu li:hover > a {
-                background-color: rgba(255, 255, 255, 0.15);
-            }
-
-            .sidebar-menu li,
-            .sub-menu li {
-                padding: 6px 10px;
-                cursor: pointer;
-            }
-
-        /* Arrow animation */
-        .arrow {
-            transition: transform 0.3s;
-        }
-
-            .arrow.rotate {
-                transform: rotate(90deg);
-            }
-
-        /* Sub menu */
-        .submenu-collapse {
-            display: none;
-        }
-
-            .submenu-collapse.show {
-                display: block;
-            }
-
-        /* Navbar */
-        .top-navbar {
-            height: 60px;
-            background: white;
-            border-bottom: 1px solid #ddd;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            margin-left: 250px;
-            transition: margin-left 0.3s ease;
-        }
-
-        .menu-toggle-btn {
-            font-size: 24px;
-            border: none;
-            background: none;
-            cursor: pointer;
-            margin-right: 15px;
-        }
-
-        .container-main {
-            margin-left: 260px;
-            padding: 20px;
-            transition: margin-left 0.3s ease;
-        }
-
-        /* ACTIVE MENU */
-        .sidebar-menu a.active {
-            background-color: rgba(255, 255, 255, 0.25);
-            font-weight: bold;
-        }
-    </style>
-</head>
-
-<body>
-
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="/Dashboard/Index">DashBoard</a>
-            </li>
-
-            <li class="has-sub">
-                <a href="javascript:void(0)" data-target="#ED">
-                    Trainsetup
-                    <i class="bi bi-chevron-right arrow"></i>
-                </a>
-                <ul class="submenu-collapse sub-menu" id="ED">
-                    <li><a href="/TrainSetup/AddTrain">AddTrain</a></li>
-                    <li><a href="/TrainSetup/AddStation">AddStation</a></li>
-                    <li><a href="/TrainSetup/TrainRoute">TrainRoute</a></li>
-                    <li><a href="/TrainSetup/TrainClass">TrainClass</a></li>
-                    <li><a href="/TrainSetup/TrainBogie">TrainBogie</a></li>
-                    <li><a href="/TrainSetup/BogieSeat">BogieSeat</a></li>
-                </ul>
-            </li>
-
-        </ul>
-    </div>
-
-    <!-- Navbar -->
-    <div id="navbar" class="top-navbar">
-        <button class="menu-toggle-btn" onclick="toggleSidebar()">☰</button>
-        <h4 class="m-0">Dashboard Panel</h4>
-    </div>
-
-    <!-- Content -->
-    <div class="container-main" id="content">
-        @RenderBody()
-    </div>
-
-    <!-- Scripts -->
-    <script>
-        // Submenu toggle (manual click)
-        document.querySelectorAll('[data-target]').forEach(menu => {
-            menu.addEventListener("click", function () {
-                const target = document.querySelector(this.dataset.target);
-                const arrow = this.querySelector(".arrow");
-
-                if (arrow) arrow.classList.toggle("rotate");
-                if (target) target.classList.toggle("show");
-            });
-        });
-
-        // Sidebar toggle
-        function toggleSidebar() {
-            const sidebar = document.getElementById("sidebar");
-            const navbar = document.getElementById("navbar");
-            const content = document.getElementById("content");
-
-            sidebar.classList.toggle("collapsed");
-            navbar.classList.toggle("collapsed-navbar");
-            content.classList.toggle("content-collapsed");
-        }
-
-        // ACTIVE MENU + SUBMENU AUTO OPEN
-        document.addEventListener("DOMContentLoaded", function () {
-
-            const currentPath = window.location.pathname.toLowerCase();
-
-            document.querySelectorAll(".sidebar-menu a").forEach(link => {
-
-                const href = link.getAttribute("href");
-                if (!href || href === "#" || href.includes("javascript")) return;
-
-                if (currentPath === href.toLowerCase()) {
-
-                    // active submenu
-                    link.classList.add("active");
-
-                    // open parent submenu
-                    const subMenu = link.closest(".submenu-collapse");
-                    if (subMenu) {
-                        subMenu.classList.add("show");
-
-                        const parent = subMenu.closest(".has-sub");
-                        if (parent) {
-                            const parentLink = parent.querySelector("a");
-                            const arrow = parent.querySelector(".arrow");
-
-                            if (parentLink) parentLink.classList.add("active");
-                            if (arrow) arrow.classList.add("rotate");
-                        }
-                    }
-                }
-            });
-        });
-    </script>
-
-</body>
-</html>
- *@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -662,6 +435,96 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
+        .sms-success {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #ecfdf5;
+            border-left: 5px solid #10b981;
+            padding: 15px 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            animation: slideIn 0.4s ease;
+            z-index: 9999;
+        }
+
+        .sms-icon {
+            width: 40px;
+            height: 40px;
+            background: #10b981;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .sms-content h4 {
+            margin: 0;
+            font-size: 16px;
+            color: #065f46;
+        }
+
+        .sms-content p {
+            margin: 3px 0 0;
+            font-size: 13px;
+            color: #047857;
+        }
+
+        .sms-fail {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fef2f2;
+            border-left: 5px solid #ef4444;
+            padding: 15px 20px;
+            border-radius: 14px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            animation: slideIn 0.4s ease;
+            z-index: 9999;
+        }
+
+            .sms-fail .sms-icon {
+                background: #ef4444;
+            }
+
+            .sms-fail .sms-content h4 {
+                margin: 0;
+                font-size: 16px;
+                color: #991b1b;
+            }
+
+            .sms-fail .sms-content p {
+                margin: 3px 0 0;
+                font-size: 13px;
+                color: #b91c1c;
+            }
+
+        @@keyframes slideIn {
+            from
+
+        {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+
+        }
+
+
+
         /* Responsive Design */
         @@media (max-width: 992px) {
             .sidebar
@@ -830,11 +693,35 @@
         </div>
     </div>
 
+    @if (TempData["MsgSuccess"] != null)
+    {
+        <div class="sms-success" id="smsSuccess">
+            <div class="sms-icon">✔</div>
+            <div class="sms-content">
+                <h4>@TempData["MsgSuccess"]</h4>
+              
+            </div>
+        </div>
+    }
+    @if (TempData["MsgFail"] != null)
+    {
+        <div class="sms-fail" id="smsFail">
+            <div class="sms-icon">✖</div>
+            <div class="sms-content">
+                <h4>@TempData["MsgFail"]</h4>
+            </div>
+        </div>
+    }
+
+
+
     <!-- Main Content -->
     
     <div class="container-main" id="content">
         @RenderBody()
     </div>
+
+
 
     <!-- Footer -->
     <div class="footer" id="footer">
@@ -933,7 +820,27 @@
                 });
             });
         });
-    </script>
+
+
+         
+        // Success message auto-hide
+        setTimeout(function () {
+            var el = document.getElementById("smsSuccess");
+            if (el) {
+                el.style.display = "none";
+            }
+        }, 2000); // 3 সেকেন্ড পরে hide
+
+        // Fail message auto-hide
+        setTimeout(function () {
+            var el = document.getElementById("smsFail");
+            if (el) {
+                el.style.display = "none";
+            }
+        }, 2000); // 3 সেকেন্ড পরে hide
+    
+
+     </script>
 
 </body>
 </html>

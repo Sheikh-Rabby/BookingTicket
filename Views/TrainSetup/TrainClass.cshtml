@@ -1,123 +1,542 @@
 ﻿@model IEnumerable<Layout.Models.Trainclass>
 
 @{
-    ViewData["Title"] = "Train List";
+    ViewData["Title"] = "Train Class List";
 }
 
+<!-- Stylesheets -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.2/css/buttons.dataTables.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
 
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/switchery@0.8.2/switchery.min.css" />
-
+<!-- JavaScript dependencies -->
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
-
-<script src="https://cdn.jsdelivr.net/npm/switchery@0.8.2/switchery.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/dataTables.buttons.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.html5.min.js"></script>
+<script src="https://cdn.datatables.net/buttons/2.4.2/js/buttons.print.min.js"></script>
 
 <style>
-    .card {
-        border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    /* Modern, clean styling (identical to Station/Train pages) */
+    body {
+        background: #f8fafc;
+        font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
-    .form-label {
+    .main-content {
+        padding: 2rem;
+        min-height: calc(100vh - 60px);
+    }
+
+    /* Page Title */
+    .page-title {
+        color: #0f172a;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 2rem;
+        padding-bottom: 1rem;
+        border-bottom: 3px solid #4f46e5;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+        .page-title i {
+            color: #4f46e5;
+        }
+
+    /* Add Class Card */
+    .add-class-card {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+        border: 1px solid #f0f2f5;
+        margin-bottom: 2.5rem;
+        overflow: hidden;
+    }
+
+    .card-header-custom {
+        padding: 1.25rem 1.5rem;
+        background: #ffffff;
+        border-bottom: 1px solid #f1f5f9;
+        font-weight: 600;
+        color: #1e293b;
+        font-size: 1.1rem;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    /* Form styling */
+    .form-label-custom {
         font-weight: 500;
-        margin-right: 5px;
-        margin-bottom: 0;
+        color: #334155;
+        margin-bottom: 0.5rem;
+        font-size: 0.95rem;
+        display: block;
     }
 
     .required-star {
-        color: red;
-        margin-left: 2px;
+        color: #e53e3e;
+        margin-left: 3px;
     }
 
-    .btn-add {
-        white-space: nowrap;
+    .input-group-custom {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+        .input-group-custom i {
+            position: absolute;
+            left: 1rem;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            pointer-events: none;
+        }
+
+    .form-control-custom {
+        width: 100%;
+        padding: 0.75rem 1rem 0.75rem 2.8rem;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 16px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #ffffff;
+    }
+
+        .form-control-custom:focus {
+            border-color: #4f46e5;
+            box-shadow: 0 0 0 4px rgba(79,70,229,0.1);
+            outline: none;
+        }
+
+    /* Add button */
+    .btn-add-custom {
+        background: linear-gradient(135deg, #4f46e5, #6366f1);
+        border: none;
+        border-radius: 16px;
+        padding: 0.75rem 1.5rem;
+        font-weight: 600;
+        color: white;
+        transition: all 0.2s;
+        box-shadow: 0 4px 10px rgba(79,70,229,0.2);
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+
+        .btn-add-custom:hover {
+            background: linear-gradient(135deg, #4338ca, #4f46e5);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(79,70,229,0.3);
+        }
+
+        .btn-add-custom i {
+            font-size: 1rem;
+        }
+
+    /* Table Container */
+    .class-table-container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.02);
+        border: 1px solid #f0f2f5;
+        overflow: hidden;
+        padding: 1rem;
+    }
+
+    /* DataTable wrapper adjustments */
+    .dataTables_wrapper {
+        padding: 0;
+    }
+
+    /* Buttons styling */
+    .dt-buttons {
+        margin-bottom: 1rem;
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+    }
+
+    .dt-button {
+        background: white !important;
+        border: 1.5px solid #e2e8f0 !important;
+        border-radius: 40px !important;
+        padding: 0.5rem 1.2rem !important;
+        font-size: 0.9rem !important;
+        font-weight: 500 !important;
+        color: #334155 !important;
+        transition: all 0.15s !important;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02) !important;
+    }
+
+        .dt-button:hover {
+            background: #f8fafc !important;
+            border-color: #cbd5e1 !important;
+            color: #0f172a !important;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.05) !important;
+        }
+
+        .dt-button i {
+            margin-right: 6px;
+            font-size: 1rem;
+        }
+
+    /* Table styling */
+    .class-table {
+        width: 100% !important;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+
+        .class-table thead th {
+            background: #f8fafc;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 1rem 1.5rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .class-table tbody td {
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            color: #334155;
+        }
+
+        .class-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .class-table tbody tr:hover {
+            background-color: #f8fafc;
+            transition: background 0.2s;
+        }
+
+    /* Class ID badge */
+    .class-id {
+        background: #eef2ff;
+        color: #4f46e5;
+        font-weight: 600;
+        padding: 0.35rem 1rem;
+        border-radius: 40px;
+        font-size: 0.85rem;
+        display: inline-block;
+    }
+
+    /* Status container */
+    .status-container {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        display: inline-block;
+    }
+
+    .status-dot-active {
+        background-color: #10b981;
+        box-shadow: 0 0 0 3px rgba(16,185,129,0.2);
+    }
+
+    .status-dot-inactive {
+        background-color: #ef4444;
+        box-shadow: 0 0 0 3px rgba(239,68,68,0.2);
+    }
+
+    .class-name {
+        font-weight: 500;
+        color: #0f172a;
+    }
+
+    /* Toggle switch (same as other pages) */
+    .toggle-switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+    }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .toggle-slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #e2e8f0;
+        transition: .3s;
+        border-radius: 34px;
+    }
+
+        .toggle-slider:before {
+            position: absolute;
+            content: "";
+            height: 18px;
+            width: 18px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .3s;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+    input:checked + .toggle-slider {
+        background: linear-gradient(135deg, #10b981, #34d399);
+    }
+
+        input:checked + .toggle-slider:before {
+            transform: translateX(24px);
+        }
+
+    /* Success message */
+    .success-message {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #10b981;
+        color: white;
+        padding: 0.75rem 1.5rem;
+        border-radius: 40px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        display: none;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 1000;
+        font-weight: 500;
+        animation: slideIn 0.3s ease;
+    }
+
+    @@keyframes slideIn {
+        from {
+            transform: translateX(100%);
+            opacity: 0;
+        }
+
+        to {
+            transform: translateX(0);
+            opacity: 1;
+        }
+    }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .main-content {
+            padding: 1rem;
+        }
+
+        .page-title {
+            font-size: 1.6rem;
+        }
+
+        .class-table thead th,
+        .class-table tbody td {
+            padding: 0.75rem 1rem;
+        }
+
+        .btn-add-custom {
+            width: 100%;
+        }
+
+        .dt-buttons {
+            justify-content: center;
+        }
     }
 </style>
 
-<div class="mt-5">
-    <div class="row justify-content-center">
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header text-center bg-primary text-white fs-5 fw-bold">
-                    Add Train Class
-                </div>
-                <form asp-controller="TrainSetup" asp-action="AddTrainClass">
-                    <div class="card-body">
-                        <div class="row g-2 align-items-center">
-                            <div class="col-2">
-                                <label class="form-label">Class Name<span class="required-star">*</span></label>
-                            </div>
-                            <div class="col-4">
-                                <input name="className" type="text" class="form-control" placeholder="Enter Class Name" required>
-                            </div>
-                            <div class="col-4">
-                                <button type="submit" class="btn btn-success btn-add">Add Class</button>
-                            </div>
+<div class="main-content">
+    <!-- Page Title -->
+    <h1 class="page-title">
+        <i class="fas fa-chair"></i> Train Class Management
+    </h1>
+
+    <!-- Add Class Card -->
+    <div class="add-class-card">
+        <div class="card-header-custom">
+            <i class="fas fa-plus-circle me-2" style="color:#4f46e5;"></i> Add New Class
+        </div>
+        <div class="card-body">
+            <form asp-controller="TrainSetup" asp-action="AddTrainClass">
+                <div class="row g-4 align-items-end">
+                    <div class="col-md-8">
+                        <label class="form-label-custom">Class Name <span class="required-star">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-tag"></i>
+                            <input name="className" type="text" class="form-control-custom"
+                                   placeholder="Enter Class Name" required>
                         </div>
                     </div>
-                </form>
-            </div>
+                    <div class="col-md-4">
+                        <button type="submit" class="btn-add-custom w-100">
+                            <i class="fas fa-plus"></i> Add Class
+                        </button>
+                    </div>
+                </div>
+            </form>
         </div>
+    </div>
+
+    <!-- Class List -->
+    <div class="class-table-container">
+        <table class="class-table" id="class-table">
+            <thead>
+                <tr>
+                    <th>Class ID</th>
+                    <th>Class Name</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var t in Model)
+                {
+                    <tr>
+                        <td><span class="class-id">#@t.ClassId</span></td>
+                        <td>
+                            <div class="status-container">
+                                <span class="status-dot @(t.isActive == true ? "status-dot-active" : "status-dot-inactive")"></span>
+                                <span class="class-name">@t.ClassName</span>
+                            </div>
+                        </td>
+                        <td>
+                            <label class="toggle-switch">
+                                <input class="status-toggle" type="checkbox"
+                                       value="@t.ClassId" data-name="@t.ClassName"
+                                       @(t.isActive == true ? "checked" : "")>
+                                <span class="toggle-slider"></span>
+                            </label>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
     </div>
 </div>
 
-<h2 class="mt-3 mb-3">Class List</h2>
-
-<table class="table table-bordered table-striped" id="class-table">
-    <thead>
-        <tr>
-            <th>Class ID</th>
-            <th>Class Name</th>
-            <th>Status</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var t in Model)
-        {
-            <tr>
-                <td>@t.ClassId</td>
-                <td>@t.ClassName</td>
-                <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" value="@t.ClassId"
-                               @(t.isActive == true ? "checked" : "")>
-                    </div>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<!-- Success Message -->
+<div class="success-message" id="successMessage">
+    <i class="fas fa-check-circle"></i>
+    <span id="messageText"></span>
+</div>
 
 <script>
-    $(document).ready(function(){
-
-
-        $('#class-table-table').DataTable({
+    $(document).ready(function() {
+        // Initialize DataTable with export buttons and scrollable feature
+        $('#class-table').DataTable({
             responsive: true,
             paging: true,
+            pageLength: 10,
             searching: true,
-            ordering:false
+            ordering: true,
+            order: [[0, 'asc']],
+            scrollY: "400px",
+            scrollCollapse: true,
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copy',
+                    text: '<i class="fas fa-copy"></i> Copy',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'csv',
+                    text: '<i class="fas fa-file-csv"></i> CSV',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'excel',
+                    text: '<i class="fas fa-file-excel"></i> Excel',
+                    className: 'dt-button'
+                },
+                {
+                    extend: 'pdf',
+                    text: '<i class="fas fa-file-pdf"></i> PDF',
+                    className: 'dt-button',
+                    orientation: 'portrait',
+                    pageSize: 'A4'
+                },
+                {
+                    extend: 'print',
+                    text: '<i class="fas fa-print"></i> Print',
+                    className: 'dt-button'
+                }
+            ],
+            language: {
+                search: "🔍 Search classes:",
+                lengthMenu: "Show _MENU_ classes",
+                info: "Showing _START_ to _END_ of _TOTAL_ classes",
+                paginate: {
+                    previous: "<i class='fas fa-chevron-left'></i>",
+                    next: "<i class='fas fa-chevron-right'></i>"
+                }
+            }
         });
 
+        // Toggle class status via AJAX (unchanged, but uses custom toggle)
+        $(document).on("change", ".status-toggle", function() {
+            var classId = $(this).val();
+            var className = $(this).data('name');
+            var isActive = $(this).is(':checked');
+            var row = $(this).closest('tr');
+            var statusDot = row.find('.status-dot');
 
-        $(document).on("change", ".form-check-input", function() {
-            var ClassId = $(this).val();
+            // Update visual dot
+            if (isActive) {
+                statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
+            } else {
+                statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
+            }
+
+            showSuccessMessage('Class "' + className + '" has been ' + (isActive ? 'activated' : 'deactivated'));
 
             $.ajax({
                 url: '/TrainSetup/ClassIsActive',
                 type: 'POST',
-                data: { classID: ClassId },
+                data: { classID: classId },  // matches controller parameter name
                 success: function(res) {
-                    console.log("TrainId sent: " + classID);
+                    console.log("Class status updated: " + classId);
                 },
                 error: function(err) {
-                    console.log("Error sending TrainId", err);
+                    console.log("Error updating class status", err);
+                    // Revert UI on error
+                    $(this).prop('checked', !isActive);
+                    if (isActive) {
+                        statusDot.removeClass('status-dot-active').addClass('status-dot-inactive');
+                    } else {
+                        statusDot.removeClass('status-dot-inactive').addClass('status-dot-active');
+                    }
+                    showSuccessMessage('Failed to update class status');
                 }
             });
         });
 
+        function showSuccessMessage(message) {
+            $('#messageText').text(message);
+            $('#successMessage').fadeIn();
+            setTimeout(function() {
+                $('#successMessage').fadeOut();
+            }, 3000);
+        }
     });
 </script>
