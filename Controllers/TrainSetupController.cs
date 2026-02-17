@@ -182,5 +182,10 @@ namespace Layout.Controllers
 
         #endregion
 
+        public async Task<IActionResult> TrainAnimation()
+        {
+            return View();
+        }
+
     }
 }

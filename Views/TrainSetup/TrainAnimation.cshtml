@@ -1,0 +1,590 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classic Steam Train - Engine & Coaches</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 1200px;
+            width: 90%;
+        }
+
+        h2 {
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 300;
+            border-bottom: 2px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .train-container {
+            background: #f5f5f5;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        svg {
+            display: block;
+            margin: 0 auto;
+            min-width: 1000px;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.2));
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.4);
+        }
+
+            button:hover {
+                background: #764ba2;
+                transform: translateY(-2px);
+                box-shadow: 0 5px 20px rgba(102, 126, 234, 0.6);
+            }
+
+        .speed-control {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: white;
+            padding: 5px 20px;
+            border-radius: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        input[type="range"] {
+            width: 200px;
+            height: 5px;
+            background: #667eea;
+            border-radius: 5px;
+            -webkit-appearance: none;
+        }
+
+            input[type="range"]::-webkit-slider-thumb {
+                -webkit-appearance: none;
+                width: 20px;
+                height: 20px;
+                background: #667eea;
+                border-radius: 50%;
+                cursor: pointer;
+                border: 2px solid white;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            }
+
+        .credit {
+            text-align: center;
+            margin-top: 20px;
+            color: #666;
+            font-size: 12px;
+            border-top: 1px solid #ddd;
+            padding-top: 15px;
+        }
+
+            .credit span {
+                color: #667eea;
+                font-weight: bold;
+            }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>🚂 CLASSIC STEAM TRAIN • ENGINE & 4 COACHES</h2>
+
+        <div class="train-container">
+            <svg viewBox="0 0 1200 400" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background with gradient -->
+                <defs>
+                    <linearGradient id="sky" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#87CEEB" />
+                        <stop offset="100%" stop-color="#E0F6FF" />
+                    </linearGradient>
+                    <linearGradient id="ground" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stop-color="#90EE90" />
+                        <stop offset="100%" stop-color="#32CD32" />
+                    </linearGradient>
+                    <linearGradient id="metal" x1="0%" y1="0%" x2="100%" y2="0%">
+                        <stop offset="0%" stop-color="#C0C0C0" />
+                        <stop offset="50%" stop-color="#E8E8E8" />
+                        <stop offset="100%" stop-color="#C0C0C0" />
+                    </linearGradient>
+                    <filter id="shadow">
+                        <feDropShadow dx="2" dy="2" stdDeviation="3" flood-opacity="0.3" />
+                    </filter>
+                </defs>
+
+                <!-- Sky -->
+                <rect width="1200" height="400" fill="url(#sky)" />
+
+                <!-- Ground -->
+                <rect y="300" width="1200" height="100" fill="url(#ground)" />
+
+                <!-- Hills -->
+                <path d="M0 300 L200 220 L400 280 L600 200 L800 260 L1000 220 L1200 280 L1200 300 Z" fill="#228B22" opacity="0.5" />
+
+                <!-- Train tracks -->
+                <rect y="295" width="1200" height="8" fill="#8B4513" />
+                <rect y="303" width="1200" height="4" fill="#A0522D" />
+                <g class="rails" opacity="0.8">
+                    <line x1="0" y1="299" x2="1200" y2="299" stroke="#FFD700" stroke-width="2" stroke-dasharray="25 15" />
+                </g>
+
+                <!-- Railroad ties -->
+                <g class="ties">
+                    <rect x="20" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 24 300)" />
+                    <rect x="70" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 74 300)" />
+                    <rect x="120" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 124 300)" />
+                    <rect x="170" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 174 300)" />
+                    <rect x="220" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 224 300)" />
+                    <rect x="270" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 274 300)" />
+                    <rect x="320" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 324 300)" />
+                    <rect x="370" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 374 300)" />
+                    <rect x="420" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 424 300)" />
+                    <rect x="470" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 474 300)" />
+                    <rect x="520" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 524 300)" />
+                    <rect x="570" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 574 300)" />
+                    <rect x="620" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 624 300)" />
+                    <rect x="670" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 674 300)" />
+                    <rect x="720" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 724 300)" />
+                    <rect x="770" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 774 300)" />
+                    <rect x="820" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 824 300)" />
+                    <rect x="870" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 874 300)" />
+                    <rect x="920" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 924 300)" />
+                    <rect x="970" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 974 300)" />
+                    <rect x="1020" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 1024 300)" />
+                    <rect x="1070" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 1074 300)" />
+                    <rect x="1120" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 1124 300)" />
+                    <rect x="1170" y="290" width="8" height="20" fill="#8B4513" transform="rotate(-5 1174 300)" />
+                </g>
+
+                <!-- Sun with rays -->
+                <circle cx="1000" cy="70" r="35" fill="#FFD700" filter="url(#shadow)" />
+                <g class="sun-rays" opacity="0.6">
+                    <line x1="1000" y1="70" x2="1080" y2="70" stroke="#FFD700" stroke-width="3" />
+                    <line x1="1000" y1="70" x2="1040" y2="20" stroke="#FFD700" stroke-width="3" />
+                    <line x1="1000" y1="70" x2="1040" y2="120" stroke="#FFD700" stroke-width="3" />
+                    <line x1="1000" y1="70" x2="950" y2="20" stroke="#FFD700" stroke-width="3" />
+                    <line x1="1000" y1="70" x2="920" y2="70" stroke="#FFD700" stroke-width="3" />
+                </g>
+
+                <!-- Clouds -->
+                <g class="cloud" opacity="0.8">
+                    <circle cx="150" cy="60" r="20" fill="white" />
+                    <circle cx="175" cy="45" r="25" fill="white" />
+                    <circle cx="205" cy="50" r="20" fill="white" />
+                    <circle cx="190" cy="70" r="15" fill="white" />
+                    <animateTransform attributeName="transform" type="translate" values="0,0;20,0;0,0" dur="8s" repeatCount="indefinite" />
+                </g>
+
+                <g class="cloud" opacity="0.8">
+                    <circle cx="450" cy="90" r="18" fill="white" />
+                    <circle cx="475" cy="75" r="22" fill="white" />
+                    <circle cx="505" cy="80" r="18" fill="white" />
+                    <animateTransform attributeName="transform" type="translate" values="0,0;-15,0;0,0" dur="10s" repeatCount="indefinite" />
+                </g>
+
+                <!-- MAIN TRAIN -->
+                <g class="whole-train" transform="translate(50, 180)">
+
+                    <!-- ===== LOCOMOTIVE (ENGINE) ===== -->
+                    <g class="engine" filter="url(#shadow)">
+                        <!-- Main boiler -->
+                        <rect x="0" y="40" width="240" height="80" rx="15" fill="#4A4A4A" stroke="#333" stroke-width="3" />
+
+                        <!-- Boiler bands -->
+                        <rect x="30" y="45" width="10" height="70" fill="#8B8B8B" />
+                        <rect x="100" y="45" width="10" height="70" fill="#8B8B8B" />
+                        <rect x="170" y="45" width="10" height="70" fill="#8B8B8B" />
+
+                        <!-- Cab -->
+                        <rect x="190" y="15" width="50" height="40" fill="#8B4513" stroke="#333" stroke-width="2" />
+                        <rect x="200" y="25" width="15" height="15" fill="#87CEEB" />
+                        <rect x="225" y="25" width="15" height="15" fill="#87CEEB" />
+
+                        <!-- Chimney -->
+                        <rect x="60" y="5" width="25" height="40" fill="#8B8B8B" stroke="#333" stroke-width="2" />
+                        <ellipse cx="72.5" cy="5" rx="12" ry="5" fill="#696969" />
+
+                        <!-- Dome -->
+                        <ellipse cx="130" cy="30" rx="20" ry="10" fill="#8B8B8B" />
+
+                        <!-- Headlight -->
+                        <circle cx="235" cy="70" r="8" fill="#FFD700">
+                            <animate attributeName="r" values="8;9;8" dur="0.5s" repeatCount="indefinite" />
+                        </circle>
+
+                        <!-- Cowcatcher -->
+                        <path d="M0 90 L-15 110 L0 110 Z" fill="#8B8B8B" />
+                        <path d="M15 90 L0 110 L15 110 Z" fill="#8B8B8B" />
+                        <path d="M30 90 L15 110 L30 110 Z" fill="#8B8B8B" />
+
+                        <!-- Smoke -->
+                        <g class="smoke">
+                            <circle cx="72" cy="0" r="12" fill="#FFFFFF" opacity="0.8">
+                                <animate attributeName="cy" values="0;-15;-30" dur="2s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="12;15;12" dur="2s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="0.8;0.5;0" dur="2s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="72" cy="-15" r="15" fill="#FFFFFF" opacity="0.6">
+                                <animate attributeName="cy" values="-15;-30;-45" dur="2s" begin="0.3s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="15;18;15" dur="2s" begin="0.3s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="0.6;0.3;0" dur="2s" begin="0.3s" repeatCount="indefinite" />
+                            </circle>
+                            <circle cx="82" cy="-25" r="10" fill="#FFFFFF" opacity="0.4">
+                                <animate attributeName="cy" values="-25;-40;-55" dur="2s" begin="0.6s" repeatCount="indefinite" />
+                                <animate attributeName="r" values="10;13;10" dur="2s" begin="0.6s" repeatCount="indefinite" />
+                                <animate attributeName="opacity" values="0.4;0.2;0" dur="2s" begin="0.6s" repeatCount="indefinite" />
+                            </circle>
+                        </g>
+
+                        <!-- Wheels -->
+                        <g class="engine-wheels">
+                            <!-- Front wheel (large) -->
+                            <g class="wheel" transform="translate(190, 100)">
+                                <circle cx="0" cy="0" r="22" fill="#2C3E50" stroke="#95A5A6" stroke-width="4" />
+                                <circle cx="0" cy="0" r="6" fill="#FFD700" />
+                                <line x1="-15" y1="-15" x2="15" y2="15" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="15" y1="-15" x2="-15" y2="15" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="-22" y1="0" x2="22" y2="0" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="0" y1="-22" x2="0" y2="22" stroke="#95A5A6" stroke-width="3" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+
+                            <!-- Middle wheel -->
+                            <g class="wheel" transform="translate(110, 100)">
+                                <circle cx="0" cy="0" r="20" fill="#2C3E50" stroke="#95A5A6" stroke-width="4" />
+                                <circle cx="0" cy="0" r="5" fill="#FFD700" />
+                                <line x1="-14" y1="-14" x2="14" y2="14" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="14" y1="-14" x2="-14" y2="14" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="-20" y1="0" x2="20" y2="0" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="0" y1="-20" x2="0" y2="20" stroke="#95A5A6" stroke-width="3" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+
+                            <!-- Rear wheel -->
+                            <g class="wheel" transform="translate(40, 100)">
+                                <circle cx="0" cy="0" r="18" fill="#2C3E50" stroke="#95A5A6" stroke-width="4" />
+                                <circle cx="0" cy="0" r="5" fill="#FFD700" />
+                                <line x1="-13" y1="-13" x2="13" y2="13" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="13" y1="-13" x2="-13" y2="13" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="-18" y1="0" x2="18" y2="0" stroke="#95A5A6" stroke-width="3" />
+                                <line x1="0" y1="-18" x2="0" y2="18" stroke="#95A5A6" stroke-width="3" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                        </g>
+
+                        <!-- Connecting rods -->
+                        <line x1="70" y1="95" x2="130" y2="95" stroke="#95A5A6" stroke-width="4" />
+                        <line x1="140" y1="95" x2="200" y2="95" stroke="#95A5A6" stroke-width="4" />
+                    </g>
+
+                    <!-- ===== COACH 1 - PASSENGER ===== -->
+                    <g class="coach" transform="translate(270, 45)" filter="url(#shadow)">
+                        <rect x="0" y="25" width="160" height="65" rx="8" fill="#8B4513" stroke="#4A4A4A" stroke-width="3" />
+
+                        <!-- Windows -->
+                        <rect x="20" y="35" width="25" height="25" fill="#87CEEB" />
+                        <rect x="60" y="35" width="25" height="25" fill="#87CEEB" />
+                        <rect x="100" y="35" width="25" height="25" fill="#87CEEB" />
+
+                        <!-- Roof -->
+                        <rect x="-5" y="15" width="170" height="12" rx="6" fill="#4A4A4A" />
+
+                        <!-- Door -->
+                        <rect x="65" y="50" width="30" height="40" fill="#2C3E50" />
+                        <circle cx="87" cy="70" r="3" fill="#FFD700" />
+
+                        <!-- Coach details -->
+                        <line x1="0" y1="45" x2="160" y2="45" stroke="#FFD700" stroke-width="1" stroke-dasharray="5,5" />
+
+                        <!-- Wheels -->
+                        <g class="coach-wheels">
+                            <g class="wheel" transform="translate(40, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                            <g class="wheel" transform="translate(120, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                        </g>
+
+                        <text x="60" y="105" fill="#FFD700" font-size="8">PASSENGER</text>
+                    </g>
+
+                    <!-- ===== COACH 2 - DINING ===== -->
+                    <g class="coach" transform="translate(450, 45)" filter="url(#shadow)">
+                        <rect x="0" y="25" width="160" height="65" rx="8" fill="#A0522D" stroke="#4A4A4A" stroke-width="3" />
+
+                        <!-- Larger windows for dining -->
+                        <rect x="25" y="35" width="30" height="25" fill="#FFE4B5" />
+                        <rect x="70" y="35" width="30" height="25" fill="#FFE4B5" />
+                        <rect x="115" y="35" width="30" height="25" fill="#FFE4B5" />
+
+                        <!-- Roof with vents -->
+                        <rect x="-5" y="15" width="170" height="12" rx="6" fill="#4A4A4A" />
+                        <rect x="40" y="10" width="15" height="8" fill="#696969" />
+                        <rect x="100" y="10" width="15" height="8" fill="#696969" />
+
+                        <!-- Table inside -->
+                        <circle cx="40" cy="52" r="3" fill="#FFD700" />
+                        <circle cx="85" cy="52" r="3" fill="#FFD700" />
+                        <circle cx="130" cy="52" r="3" fill="#FFD700" />
+
+                        <!-- Wheels -->
+                        <g class="coach-wheels">
+                            <g class="wheel" transform="translate(40, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                            <g class="wheel" transform="translate(120, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                        </g>
+
+                        <text x="65" y="105" fill="#FFD700" font-size="8">DINING</text>
+                    </g>
+
+                    <!-- ===== COACH 3 - SLEEPER ===== -->
+                    <g class="coach" transform="translate(630, 45)" filter="url(#shadow)">
+                        <rect x="0" y="25" width="160" height="65" rx="8" fill="#2C3E50" stroke="#4A4A4A" stroke-width="3" />
+
+                        <!-- Smaller sleeper windows -->
+                        <rect x="20" y="35" width="18" height="20" fill="#FFE4B5" />
+                        <rect x="48" y="35" width="18" height="20" fill="#FFE4B5" />
+                        <rect x="76" y="35" width="18" height="20" fill="#FFE4B5" />
+                        <rect x="104" y="35" width="18" height="20" fill="#FFE4B5" />
+                        <rect x="132" y="35" width="18" height="20" fill="#FFE4B5" />
+
+                        <!-- Roof -->
+                        <rect x="-5" y="15" width="170" height="12" rx="6" fill="#4A4A4A" />
+
+                        <!-- Curtains -->
+                        <line x1="20" y1="35" x2="20" y2="55" stroke="#FFD700" stroke-width="1" />
+                        <line x1="48" y1="35" x2="48" y2="55" stroke="#FFD700" stroke-width="1" />
+
+                        <!-- Wheels -->
+                        <g class="coach-wheels">
+                            <g class="wheel" transform="translate(40, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                            <g class="wheel" transform="translate(120, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                        </g>
+
+                        <text x="65" y="105" fill="#FFD700" font-size="8">SLEEPER</text>
+                    </g>
+
+                    <!-- ===== COACH 4 - OBSERVATION ===== -->
+                    <g class="coach" transform="translate(810, 40)" filter="url(#shadow)">
+                        <rect x="0" y="25" width="160" height="65" rx="8" fill="#8B4513" stroke="#4A4A4A" stroke-width="3" />
+
+                        <!-- Observation windows (dome) -->
+                        <path d="M30 15 L60 5 L100 5 L130 15" fill="#87CEEB" stroke="#4A4A4A" stroke-width="2" />
+
+                        <!-- Side windows -->
+                        <rect x="25" y="35" width="30" height="25" fill="#87CEEB" />
+                        <rect x="70" y="35" width="30" height="25" fill="#87CEEB" />
+                        <rect x="115" y="35" width="30" height="25" fill="#87CEEB" />
+
+                        <!-- Roof -->
+                        <rect x="-5" y="15" width="170" height="12" rx="6" fill="#4A4A4A" />
+
+                        <!-- Observation deck railing -->
+                        <line x1="30" y1="20" x2="130" y2="20" stroke="#FFD700" stroke-width="1" />
+                        <line x1="40" y1="15" x2="40" y2="20" stroke="#FFD700" stroke-width="1" />
+                        <line x1="60" y1="13" x2="60" y2="20" stroke="#FFD700" stroke-width="1" />
+                        <line x1="80" y1="13" x2="80" y2="20" stroke="#FFD700" stroke-width="1" />
+                        <line x1="100" y1="13" x2="100" y2="20" stroke="#FFD700" stroke-width="1" />
+                        <line x1="120" y1="15" x2="120" y2="20" stroke="#FFD700" stroke-width="1" />
+
+                        <!-- Wheels -->
+                        <g class="coach-wheels">
+                            <g class="wheel" transform="translate(40, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                            <g class="wheel" transform="translate(120, 90)">
+                                <circle cx="0" cy="0" r="15" fill="#2C3E50" stroke="#95A5A6" stroke-width="3" />
+                                <circle cx="0" cy="0" r="4" fill="#FFD700" />
+                                <animateTransform attributeName="transform" type="rotate" from="0 0 0" to="360 0 0" dur="2s" repeatCount="indefinite" />
+                            </g>
+                        </g>
+
+                        <text x="55" y="105" fill="#FFD700" font-size="8">OBSERVATION</text>
+                    </g>
+
+                    <!-- Connectors between coaches -->
+                    <line x1="260" y1="90" x2="270" y2="90" stroke="#4A4A4A" stroke-width="5" />
+                    <line x1="440" y1="90" x2="450" y2="90" stroke="#4A4A4A" stroke-width="5" />
+                    <line x1="620" y1="90" x2="630" y2="90" stroke="#4A4A4A" stroke-width="5" />
+                    <line x1="800" y1="90" x2="810" y2="90" stroke="#4A4A4A" stroke-width="5" />
+
+                    <!-- Train movement -->
+                    <animateTransform attributeName="transform"
+                                      type="translate"
+                                      from="50,180"
+                                      to="150,180"
+                                      dur="6s"
+                                      repeatCount="indefinite" />
+                </g>
+
+                <!-- Birds -->
+                <g class="birds">
+                    <path d="M700 60 L710 50 L720 60" stroke="#2C3E50" fill="none" stroke-width="2">
+                        <animate attributeName="d" values="M700 60 L710 50 L720 60;M700 55 L710 45 L720 55;M700 60 L710 50 L720 60" dur="1s" repeatCount="indefinite" />
+                    </path>
+                    <path d="M750 80 L760 70 L770 80" stroke="#2C3E50" fill="none" stroke-width="2">
+                        <animate attributeName="d" values="M750 80 L760 70 L770 80;M750 75 L760 65 L770 75;M750 80 L760 70 L770 80" dur="1.2s" repeatCount="indefinite" />
+                    </path>
+                </g>
+
+                <!-- Trees -->
+                <g class="trees">
+                    <g transform="translate(100, 260)">
+                        <rect x="5" y="-20" width="6" height="40" fill="#8B4513" />
+                        <circle cx="8" cy="-30" r="15" fill="#228B22" />
+                    </g>
+                    <g transform="translate(1150, 260)">
+                        <rect x="5" y="-20" width="6" height="40" fill="#8B4513" />
+                        <circle cx="8" cy="-30" r="15" fill="#228B22" />
+                    </g>
+                    <g transform="translate(500, 270)">
+                        <rect x="5" y="-10" width="5" height="30" fill="#8B4513" />
+                        <circle cx="7.5" cy="-20" r="10" fill="#228B22" />
+                    </g>
+                </g>
+            </svg>
+        </div>
+
+        <div class="controls">
+            <button onclick="playAnimation()">▶ PLAY</button>
+            <button onclick="pauseAnimation()">⏸ PAUSE</button>
+            <button onclick="resetAnimation()">↺ RESET</button>
+
+            <div class="speed-control">
+                <span>🐢</span>
+                <input type="range" id="speedSlider" min="0.3" max="3" step="0.1" value="1">
+                <span>🐇</span>
+            </div>
+        </div>
+
+        <div class="credit">
+            <span>CLASSIC STEAM TRAIN</span> • Engine + 4 Coaches (Passenger • Dining • Sleeper • Observation) • Inspired by iStock reference #166010848
+        </div>
+    </div>
+
+    <script>
+        const train = document.querySelector('.whole-train animateTransform');
+        const wheels = document.querySelectorAll('.wheel animateTransform');
+        const smoke = document.querySelectorAll('.smoke circle animate');
+        const speedSlider = document.getElementById('speedSlider');
+
+        let isPaused = false;
+
+        function playAnimation() {
+            const animations = document.querySelectorAll('animate, animateTransform');
+            animations.forEach(anim => {
+                try {
+                    anim.unpauseAnimations?.();
+                    anim.beginElement?.();
+                } catch(e) {}
+            });
+            isPaused = false;
+        }
+
+        function pauseAnimation() {
+            const animations = document.querySelectorAll('animate, animateTransform');
+            animations.forEach(anim => {
+                try {
+                    anim.pauseAnimations?.();
+                } catch(e) {}
+            });
+            isPaused = true;
+        }
+
+        function resetAnimation() {
+            const animations = document.querySelectorAll('animate, animateTransform');
+            animations.forEach(anim => {
+                try {
+                    anim.setCurrentTime?.(0);
+                } catch(e) {}
+            });
+        }
+
+        speedSlider.addEventListener('input', function(e) {
+            const speed = parseFloat(e.target.value);
+
+            // Update train movement speed
+            if (train) {
+                train.setAttribute('dur', 6 / speed + 's');
+            }
+
+            // Update wheel rotation speeds
+            wheels.forEach(wheel => {
+                wheel.setAttribute('dur', 2 / speed + 's');
+            });
+
+            // Update smoke animation speeds
+            smoke.forEach(s => {
+                if (s.getAttribute('attributeName') === 'cy') {
+                    s.setAttribute('dur', 2 / speed + 's');
+                }
+            });
+        });
+
+        // Click on coaches to highlight
+        const coaches = document.querySelectorAll('.coach');
+        coaches.forEach((coach, index) => {
+            coach.addEventListener('click', function() {
+                coaches.forEach(c => c.setAttribute('filter', 'url(#shadow)'));
+                this.setAttribute('filter', 'url(#shadow) brightness(1.2)');
+            });
+        });
+    </script>
+</body>
+</html>
