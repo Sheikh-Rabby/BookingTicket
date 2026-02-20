@@ -23,6 +23,8 @@ namespace Layout.Data
         Task AddBogieSeat(string bogieID, string seatName);
         Task<IEnumerable<BogieSeat>> SeatList();
         Task UpdateSeatStatus(string seatID);
+        Task<IEnumerable<TrainOffDay>> TrainOffDay();
+        Task AddTrainOffDay(string trainId, string offDay);
 
 
     }

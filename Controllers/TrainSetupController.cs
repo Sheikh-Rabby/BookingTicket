@@ -187,5 +187,18 @@ namespace Layout.Controllers
             return View();
         }
 
+        public async Task<IActionResult> TrainOffDay()
+        {
+            var trains = await _DataRepository.TrainOffDay();
+            return View(trains);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddTrainOffDay(string trainId,string offDay)
+        {
+            await _DataRepository.AddTrainOffDay(trainId, offDay);
+            return RedirectToAction("TrainOffDay");
+        }
+
     }
 }

@@ -39,6 +39,14 @@
         public bool? isActive { get; set; }
 
     }
+    public class TrainOffDay
+    {
+       public string? offDayID { get; set; }
+       public string? trainName { get; set; }
+       public string? off_day { get; set; }
+       public bool? isActive { get; set; }
+
+    }
 
 
 

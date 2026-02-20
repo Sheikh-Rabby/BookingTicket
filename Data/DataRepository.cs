@@ -239,5 +239,28 @@ namespace Layout.Data
         #endregion
 
 
+        public async Task<IEnumerable<TrainOffDay>> TrainOffDay()
+        {
+            using var connection = CreateConnection();
+            var trains = await connection.QueryAsync<TrainOffDay>(
+                "select tfd.offDayID,tfd.trainID,tfd.off_Day, tfd.isActive,t.trainName  from TrainOffDay tfd inner join Train t on tfd.trainID=t.trainID"
+                );
+            return trains;
+
+        }
+
+        public async Task AddTrainOffDay(string trainId, string offDay)
+        {
+            using var connection = CreateConnection();
+            var trainBogie = await connection.QueryAsync(
+
+                "dbo.OffDayForTrain", new { trainId = trainId, offDay = offDay },
+                commandType: CommandType.StoredProcedure
+                );
+
+        }
+
+
+
     }
 }
