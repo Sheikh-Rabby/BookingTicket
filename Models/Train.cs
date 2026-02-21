@@ -47,7 +47,21 @@
        public bool? isActive { get; set; }
 
     }
+    public class TrainDetails
+    {
+        public string? ID { get; set; }
+        public string? trainName { get; set; }
+        public string? from_station { get; set; }
+        public string? to_station { get; set; }
+        public decimal? price { get; set; }
 
+    }
 
+    public class TrainAllDetails
+    {
+        public IEnumerable<Train>? TrainList { get; set; }
+        public IEnumerable<Station>? StationList { get; set; }
+        public IEnumerable<TrainDetails>? TrainDetailsList { get; set; }
+    }
 
 }

@@ -25,6 +25,8 @@ namespace Layout.Data
         Task UpdateSeatStatus(string seatID);
         Task<IEnumerable<TrainOffDay>> TrainOffDay();
         Task AddTrainOffDay(string trainId, string offDay);
+        Task <IEnumerable<TrainDetails>> DetailsForTrain();
+        Task AddTrainDetails(TrainDetails trainDetails);
 
 
     }

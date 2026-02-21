@@ -154,6 +154,7 @@ namespace Layout.Data
                 "dbo.classIsActive", new { classID = classID },
                 commandType: CommandType.StoredProcedure
                 );
+            
 
         }
 
@@ -238,7 +239,7 @@ namespace Layout.Data
 
         #endregion
 
-
+        #region TrainOffDay
         public async Task<IEnumerable<TrainOffDay>> TrainOffDay()
         {
             using var connection = CreateConnection();
@@ -259,6 +260,31 @@ namespace Layout.Data
                 );
 
         }
+
+        #endregion
+
+
+        public async Task<IEnumerable<TrainDetails>> DetailsForTrain()
+        {
+            using var connection = CreateConnection();
+            var trains = await connection.QueryAsync<TrainDetails>(
+               "select td.id,td.trainId,td.price,t.trainName,s.stationName as from_station,st.stationName as To_station from Train_Details td " +
+               "\r\nleft join Train t on td.trainId=t.trainID" +
+               " \r\nleft join station s on td.from_station=s.stationID" +
+               " \r\njoin station st on td.to_station=st.stationID"
+                );
+            return trains;
+        }
+
+
+        public async Task AddTrainDetails(TrainDetails trainDetails)
+        {
+            using var connection = CreateConnection();
+            await connection.QueryAsync(
+              "[dbo].[AddTrainDetails]", new { trainName = trainDetails.trainName, from_station = trainDetails.from_station, to_Station = trainDetails.to_station, price = trainDetails.price }
+                );
+        }
+
 
 
 

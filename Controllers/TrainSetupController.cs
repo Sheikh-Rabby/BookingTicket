@@ -1,6 +1,7 @@
 ﻿using Layout.Data;
 using Layout.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace Layout.Controllers
 {
@@ -198,6 +199,33 @@ namespace Layout.Controllers
         {
             await _DataRepository.AddTrainOffDay(trainId, offDay);
             return RedirectToAction("TrainOffDay");
+        }
+
+        public async Task<IActionResult> TrainDetails()
+        {
+            
+            var trainList = await _DataRepository.RouteTrainList();
+            var stations = await _DataRepository.StationList();
+            var trainDetails = await _DataRepository.DetailsForTrain();
+
+            var model = new TrainAllDetails
+            {
+                TrainList = trainList,
+                StationList = stations,
+                TrainDetailsList = trainDetails
+
+            };
+
+            return View(model);
+
+            
+        }
+
+
+        public async Task<IActionResult> AddTrainDetails(TrainDetails trainDetails)
+        {
+            await _DataRepository.AddTrainDetails(trainDetails);
+            return RedirectToAction("TrainDetails");
         }
 
     }
