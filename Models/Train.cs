@@ -50,7 +50,18 @@
     public class TrainDetails
     {
         public string? ID { get; set; }
-        public string? trainName { get; set; }
+        private string? trainname;
+        public string? trainName
+        {
+            get => trainname;
+            set
+            {
+                if (string.IsNullOrEmpty(value))
+                    throw new ArgumentException("train name cannot be emplty");
+                trainname = value;
+            }
+            
+        }
         public string? from_station { get; set; }
         public string? to_station { get; set; }
         public decimal? price { get; set; }
