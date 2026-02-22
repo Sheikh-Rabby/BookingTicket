@@ -645,7 +645,7 @@
             </li>
 
             <li>
-                <a href="/Passengers/Index">
+                <a href="/User/SearchTrain">
                     <i class="fas fa-users"></i>
                     <span>Passengers</span>
                 </a>
@@ -687,11 +687,19 @@
                 <span class="badge">3</span>
             </div>
 
-            <div class="user-profile">
-                <div class="user-avatar">JD</div>
-                <span class="d-none d-md-inline">John Doe</span>
-                <i class="fas fa-chevron-down d-none d-md-inline"></i>
+            <div class="dropdown">
+                <div class="user-profile dropdown-toggle" data-bs-toggle="dropdown">
+                    <div class="user-avatar">JD</div>
+                    <span class="d-none d-md-inline">John Doe</span>
+                </div>
+
+                <ul class="dropdown-menu dropdown-menu-end">
+                    <li><a class="dropdown-item" href="/profile">Profile</a></li>
+                    <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                </ul>
             </div>
+
+
         </div>
     </div>
 

@@ -281,7 +281,7 @@ namespace Layout.Data
         {
             using var connection = CreateConnection();
             await connection.QueryAsync(
-              "[dbo].[AddTrainDetails]", new { trainName = trainDetails.trainName, from_station = trainDetails.from_station, to_Station = trainDetails.to_station, price = trainDetails.price }
+              "[dbo].[AddTrainDetails]", new { trainName = trainDetails.trainName, classId=trainDetails.classId, from_station = trainDetails.from_station, to_Station = trainDetails.to_station, price = trainDetails.price }
                 );
         }
 

@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>বাংলাদেশ রেলওয়ে</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body {
+            background:white;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Navbar Styling - exactly like your image */
+        .navbar {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            padding: 1rem 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            color: #0066b3 !important;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-link {
+            color: #333 !important;
+            font-weight: 500;
+            padding: 0.5rem 1rem !important;
+            transition: color 0.3s ease;
+            font-size: 1rem;
+        }
+
+            .nav-link:hover {
+                color: #0066b3 !important;
+            }
+
+            .nav-link.active {
+                color: #0066b3 !important;
+                font-weight: 600;
+            }
+
+        /* User info section in navbar */
+        .user-info {
+            background: #f0f7ff;
+            padding: 0.5rem 1rem;
+            border-radius: 40px;
+            color: #0066b3;
+            font-weight: 500;
+            border: 1px solid #cce4ff;
+        }
+
+            .user-info i {
+                margin-right: 8px;
+                color: #0066b3;
+            }
+
+        /* Main content area - completely empty */
+        .container-main {
+            flex: 1 0 auto;
+            padding: 2rem 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Footer Styling - exactly like your image */
+        .footer {
+            background:white;
+            color: white;
+            padding: 2rem 0 1rem 0;
+            margin-top: auto;
+        }
+
+        .powered-by {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+
+            .powered-by span {
+                font-weight: 600;
+                color: #ffd700;
+            }
+
+        .footer-links {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+            .footer-links a {
+                color: rgba(255, 255, 255, 0.9);
+                text-decoration: none;
+                padding: 0 15px;
+                font-size: 0.95rem;
+                transition: color 0.3s ease;
+                border-right: 1px solid rgba(255, 255, 255, 0.3);
+            }
+
+                .footer-links a:last-child {
+                    border-right: none;
+                }
+
+                .footer-links a:hover {
+                    color: #ffd700;
+                }
+
+        .railway-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 0.5rem;
+            letter-spacing: 1px;
+        }
+
+        .railway-subtitle {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1rem;
+            font-weight: 400;
+            margin-bottom: 0;
+            padding-bottom: 1rem;
+        }
+
+        /* Responsive adjustments */
+        @@media (max-width: 768px) {
+            .navbar-brand
+
+        {
+            font-size: 1.2rem;
+        }
+
+        .user-info {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .footer-links a {
+            display: block;
+            border-right: none;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+            .footer-links a:last-child {
+                border-bottom: none;
+            }
+
+        .railway-title {
+            font-size: 1.4rem;
+        }
+
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navbar - exactly like your image -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-train me-2"></i>Bangladesh Railway
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Verify Ticket</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Train Information</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Contact Us</a>
+                    </li>
+                </ul>
+                <div class="user-info">
+                    <i class="fas fa-user-circle"></i>
+                    <span>KAWSAR SHEIKH RAB...</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+   
+    <div class="container-main" id="content">
+        @RenderBody()
+    
+    </div>
+
+    <!-- Footer - exactly like your image -->
+    <footer class="footer d-none">
+        <div class="container">
+            <!-- Powered by section -->
+            <div class="powered-by">
+                Powered by <span>shehroz-Syness-Vincen JV</span>
+            </div>
+
+        
+           
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

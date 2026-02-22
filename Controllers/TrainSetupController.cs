@@ -207,13 +207,14 @@ namespace Layout.Controllers
             var trainList = await _DataRepository.RouteTrainList();
             var stations = await _DataRepository.StationList();
             var trainDetails = await _DataRepository.DetailsForTrain();
+            var classList = await _DataRepository.Classlist();
 
             var model = new TrainAllDetails
             {
                 TrainList = trainList,
                 StationList = stations,
-                TrainDetailsList = trainDetails
-
+                TrainDetailsList = trainDetails,
+                ClassList = classList
             };
 
             return View(model);

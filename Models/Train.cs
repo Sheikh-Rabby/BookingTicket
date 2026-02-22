@@ -63,6 +63,7 @@
             
         }
         public string? from_station { get; set; }
+       public string? classId { get; set; }
         public string? to_station { get; set; }
         public decimal? price { get; set; }
 
@@ -73,6 +74,7 @@
         public IEnumerable<Train>? TrainList { get; set; }
         public IEnumerable<Station>? StationList { get; set; }
         public IEnumerable<TrainDetails>? TrainDetailsList { get; set; }
+        public IEnumerable<Trainclass>? ClassList { get; set; }
     }
 
 }
