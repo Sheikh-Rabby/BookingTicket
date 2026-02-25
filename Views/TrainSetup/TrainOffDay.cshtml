@@ -569,7 +569,7 @@
 
         // Toggle bogie status via AJAX
         $(document).on("change", ".status-toggle", function() {
-            var bogieID = $(this).val();
+            var offdayID = $(this).val();
             var bogieName = $(this).data('name');
             var isActive = $(this).is(':checked');
             var row = $(this).closest('tr');
@@ -585,9 +585,9 @@
             showSuccessMessage('Bogie "' + bogieName + '" has been ' + (isActive ? 'activated' : 'deactivated'));
 
             $.ajax({
-                url: '/TrainSetup/UpdateBogieStatus',
+                url: '/TrainSetup/UpdateTrainOffDayStatus',
                 type: 'POST',
-                data: { bogieID: bogieID },
+                data: { offdayID: offdayID },
                 success: function(res) {
                     console.log("Bogie status updated: " + bogieID);
                 },

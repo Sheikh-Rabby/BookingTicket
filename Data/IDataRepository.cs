@@ -16,7 +16,7 @@ namespace Layout.Data
         Task AddTrainClass(string className);
         Task UpdateClassStatus(string classID);
 
-        Task AddTrainBogie(string bogieName,string trainID);
+        Task AddTrainBogie(string bogieName,string trainID,string classID);
         Task<IEnumerable<TrainBogie>> BogieList();
         Task UpdateBogieStatus(string bogieID);
 
@@ -26,8 +26,9 @@ namespace Layout.Data
         Task<IEnumerable<TrainOffDay>> TrainOffDay();
         Task AddTrainOffDay(string trainId, string offDay);
         Task <IEnumerable<TrainDetails>> DetailsForTrain();
-        Task AddTrainDetails(TrainDetails trainDetails);
-
+        Task AddTrainDetails(TrainDetails trainDetails); 
+        Task<IEnumerable<TrainBogie>> BogieListBYId(string trainId);
+        Task UpdateTrainOffDayStatus(string offdayID);
 
     }
 }

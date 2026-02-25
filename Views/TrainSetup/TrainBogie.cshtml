@@ -418,7 +418,7 @@
         <div class="card-body">
             <form asp-controller="TrainSetup" asp-action="AddTrainBogie">
                 <div class="row g-4">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label-custom">Train <span class="required-star">*</span></label>
                         <div class="input-group-custom">
                             <i class="fas fa-train"></i>
@@ -428,7 +428,17 @@
                             <input type="hidden" name="trainID" id="trainID" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="form-label-custom">Class <span class="required-star">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-train"></i>
+                            <select class="form-select-custom" id="class-select" required>
+                                <option value="">Select Train</option>
+                            </select>
+                            <input type="hidden" name="classID" id="classID" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label-custom">Bogie Name <span class="required-star">*</span></label>
                         <div class="input-group-custom">
                             <i class="fas fa-tag"></i>
@@ -565,6 +575,28 @@
         $('#train-select').on('change', function() {
             var trainSelected = $(this).val();
             $('#trainID').val(trainSelected);
+        });
+
+        //load class
+
+         $.ajax({
+            url: '/TrainSetup/classList',
+            type: 'GET',
+            success: function(response) {
+                var trains = response.data || response;
+                console.log('trains:', trains);
+
+                var options = '<option value="">Select Class</option>';
+                trains.forEach(function(t) {
+                    options += `<option value="${t.classId}">${t.className}</option>`;
+                });
+                $('#class-select').html(options);
+            }
+        });
+
+         $('#class-select').on('change', function() {
+            var classSelected = $(this).val();
+            $('#classID').val(classSelected);
         });
 
         // Toggle bogie status via AJAX

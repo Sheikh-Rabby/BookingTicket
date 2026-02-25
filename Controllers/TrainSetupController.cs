@@ -20,7 +20,13 @@ namespace Layout.Controllers
             var trains = await _DataRepository.TrainList();
             return View(trains);
         }
-        
+
+        public async Task<IActionResult> TrainList()
+        {
+            var trains = await _DataRepository.TrainList();
+            return Json(trains);
+        }
+
 
         [HttpPost]  
          public async Task<IActionResult> AddTrains(string trainName)
@@ -70,12 +76,7 @@ namespace Layout.Controllers
 
             }
 
-
-
-
-                
-            
-            return RedirectToAction("AddStation");
+           return RedirectToAction("AddStation");
         }
 
         [HttpPost]
@@ -114,6 +115,12 @@ namespace Layout.Controllers
             return View(trainclass);
         }
 
+        public async Task<IActionResult> classList()
+        {
+            var trainclass = await _DataRepository.Classlist();
+            return Json(trainclass);
+        }
+
         public async Task<IActionResult> AddTrainClass(string className)
         {
             await _DataRepository.AddTrainClass(className);
@@ -143,9 +150,16 @@ namespace Layout.Controllers
             return Json(new {success=true, data = TrainBogie });
 
         }
-        public async Task<IActionResult> AddTrainBogie(string bogieName,string trainID)
+        
+        public async Task<IActionResult> BogieListBYId(string trainId)
         {
-            await _DataRepository.AddTrainBogie(bogieName, trainID);
+            var TrainBogie = await _DataRepository.BogieListBYId(trainId);
+            return Json(new { success = true, data = TrainBogie });
+
+        }
+        public async Task<IActionResult> AddTrainBogie(string bogieName,string trainID, string classID)
+        {
+            await _DataRepository.AddTrainBogie(bogieName, trainID,classID);
             return RedirectToAction("TrainBogie");
         }
 
@@ -200,6 +214,15 @@ namespace Layout.Controllers
             await _DataRepository.AddTrainOffDay(trainId, offDay);
             return RedirectToAction("TrainOffDay");
         }
+
+        public async Task<IActionResult> UpdateTrainOffDayStatus(string trainId)
+        {
+             await _DataRepository.UpdateTrainOffDayStatus(trainId);
+             return RedirectToAction("TrainOffDay");
+        }
+
+
+
 
         public async Task<IActionResult> TrainDetails()
         {

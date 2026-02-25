@@ -174,12 +174,26 @@ namespace Layout.Data
             return Trainclass;
         }
 
-        public async Task AddTrainBogie(string bogieName,string trainID)
+        public async Task<IEnumerable<TrainBogie>> BogieListBYId(string trainId)
+        {
+            using var connection = CreateConnection();
+            var Trainclass = await connection.QueryAsync<TrainBogie>(
+
+                " select * from Train t left join trainbogie tb on t.trainID=tb.trainId where t.trainId=@trainId",
+                  new { trainId = trainId }
+                );
+            return Trainclass;
+
+        }
+
+
+
+        public async Task AddTrainBogie(string bogieName,string trainID,string classID)
         {
             using var connection = CreateConnection();
             var trainBogie = await connection.QueryAsync(
 
-                "dbo.AddTrainBogie", new { bogieName = bogieName, trainID= trainID },
+                "dbo.AddTrainBogie", new { bogieName = bogieName, classID=classID,trainID= trainID },
                 commandType: CommandType.StoredProcedure
                 );
 
@@ -260,6 +274,19 @@ namespace Layout.Data
                 );
 
         }
+
+        public async Task UpdateTrainOffDayStatus(string offdayID)
+        {
+            using var connection = CreateConnection();
+            var stations = await connection.QueryAsync(
+
+                "update TrainOffDay set isActive = case when isActive=1 then 0 else 1 end  where offdayID=@offdayID", new { offdayID = offdayID }
+               
+                );
+
+        }
+
+
 
         #endregion
 

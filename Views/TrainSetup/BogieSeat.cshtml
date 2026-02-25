@@ -411,7 +411,17 @@
         <div class="card-body">
             <form asp-controller="TrainSetup" asp-action="AddBogieSeat">
                 <div class="row g-4">
-                    <div class="col-md-6">
+                    <div class="col-md-4">
+                        <label class="form-label-custom">Train <span class="required-star">*</span></label>
+                        <div class="input-group-custom">
+                            <i class="fas fa-train"></i> <!-- Using train icon for bogie; you can change if desired -->
+                            <select class="form-select-custom" id="train-select" required>
+                                <option value="">Select Train</option>
+                            </select>
+                            <input type="hidden" name="trainID" id="trainID" />
+                        </div>
+                    </div>
+                    <div class="col-md-4">
                         <label class="form-label-custom">Bogie <span class="required-star">*</span></label>
                         <div class="input-group-custom">
                             <i class="fas fa-train"></i> <!-- Using train icon for bogie; you can change if desired -->
@@ -421,7 +431,7 @@
                             <input type="hidden" name="bogieID" id="bogieID" />
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-4">
                         <label class="form-label-custom">Seat Name <span class="required-star">*</span></label>
                         <div class="input-group-custom">
                             <i class="fas fa-tag"></i>
@@ -584,21 +594,46 @@
             });
         });
 
+           $.ajax({
+              url:'/TrainSetup/TrainList',
+             type:'GET',
+             success:function(response){
+               var bogies= response.data || response
+               console.log('train',bogies)
+                 var option='<option value="">Select Train</option>'
 
-        $.ajax({
-            url:'/TrainSetup/BogieForSeat',
-            type:'GET',
-            success:function(response){
-              var bogies= response.data || response
-              console.log(bogies)
-                var option='<option value="">Select Bogie</option>'
+                 bogies.forEach(function(b){
+                        option+=`<option value="${b.trainId}">${b.trainName}</option>`
+                 })
+                      $('#train-select').html(option);
+             }
+         })
 
-                bogies.forEach(function(b){
-                       option+=`<option value="${b.bogieID}">${b.bogieName}</option>`
-                })
-                 $('#bogie-select').html(option);
-            }
-        })
+          $('#train-select').on('change',function(){
+               var selected =$(this).val();
+               console.log(selected);
+                 $('#trainID').val(selected)
+
+             $.ajax({
+             url:'/TrainSetup/BogieListBYId',
+             type:'GET',
+             data:{trainId:selected},
+             success:function(response){
+               var bogies= response.data || response
+               console.log(bogies)
+                 var option='<option value="">Select Bogie</option>'
+
+                 bogies.forEach(function(b){
+                        option+=`<option value="${b.bogieID}">${b.bogieName}</option>`
+                 })
+                  $('#bogie-select').html(option);
+             }
+             })
+          })
+
+
+
+
 
           $('#bogie-select').on('change',function(){
               var selected =$(this).val();
