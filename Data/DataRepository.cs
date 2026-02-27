@@ -19,30 +19,60 @@ namespace Layout.Data
             return new SqlConnection(_connectionString);
         }
 
+        //Generic method for executing stored procedures
+
+        private async Task<IEnumerable<T>> QueryAsync<T>(string sql,object?param=null,CommandType commandType = CommandType.StoredProcedure)
+        {
+            using var connection = CreateConnection();
+            return await connection.QueryAsync<T>(sql, param, commandType: commandType);
+        }
+
+        private async Task<T>QueryFirstOrDefaultAsync<T>(string sql,object?param=null,CommandType commandType = CommandType.StoredProcedure)
+        {
+            using var connection = CreateConnection();
+            return await connection.QueryFirstOrDefaultAsync<T>(sql, param, commandType: commandType);
+        }
+
+
+
+
+
+
+
         #region train
+
+        //public async Task<IEnumerable<Train>> TrainList()
+        //{
+        //    using var connection = CreateConnection();
+        //    var trains = await connection.QueryAsync<Train>(
+        //        "dbo.trainList",
+
+        //         commandType: CommandType.StoredProcedure
+        //            );
+        // return trains;
+
+        //}
 
         public async Task<IEnumerable<Train>> TrainList()
         {
-            using var connection = CreateConnection();
-            var trains = await connection.QueryAsync<Train>(
-                "dbo.trainList",
-
-                 commandType: CommandType.StoredProcedure
-                    );
-         return trains;
-
+            return await QueryAsync<Train>("dbo.trainList");
         }
-        
+
+        //public async Task<ResponseSms> AddTrains(string trainName)
+        //{
+        //    using var connection = CreateConnection();
+        //    var result = await connection.QueryFirstOrDefaultAsync<ResponseSms>(
+        //        "dbo.AddTrain", new { trainName = trainName },
+        //        commandType:CommandType.StoredProcedure
+                
+        //        );
+        //    return result;
+
+        //}
+
         public async Task<ResponseSms> AddTrains(string trainName)
         {
-            using var connection = CreateConnection();
-            var result = await connection.QueryFirstOrDefaultAsync<ResponseSms>(
-                "dbo.AddTrain", new { trainName = trainName },
-                commandType:CommandType.StoredProcedure
-                
-                );
-            return result;
-
+            return await QueryFirstOrDefaultAsync<ResponseSms>("dbo.AddTrain", new { trainName = trainName });
         }
      
         public async Task UpdateTrainStatus(string trainId)
@@ -258,7 +288,14 @@ namespace Layout.Data
         {
             using var connection = CreateConnection();
             var trains = await connection.QueryAsync<TrainOffDay>(
-                "select tfd.offDayID,tfd.trainID,tfd.off_Day, tfd.isActive,t.trainName  from TrainOffDay tfd inner join Train t on tfd.trainID=t.trainID"
+                "select " +
+                "tfd.offDayID," +
+                "tfd.trainID," +
+                "tfd.off_Day," +
+                " tfd.isActive," +
+                "t.trainName " +
+                " from TrainOffDay tfd" +
+                " inner join Train t on tfd.trainID=t.trainID"
                 );
             return trains;
 
@@ -308,8 +345,14 @@ namespace Layout.Data
         {
             using var connection = CreateConnection();
             await connection.QueryAsync(
-              "[dbo].[AddTrainDetails]", new { trainName = trainDetails.trainName, classId=trainDetails.classId, from_station = trainDetails.from_station, to_Station = trainDetails.to_station, price = trainDetails.price }
-                );
+              "[dbo].[AddTrainDetails]", 
+              new 
+              {   trainName = trainDetails.trainName, 
+                  classId=trainDetails.classId,
+                  from_station = trainDetails.from_station,
+                  to_Station = trainDetails.to_station,
+                  price = trainDetails.price
+              });
         }
 
 

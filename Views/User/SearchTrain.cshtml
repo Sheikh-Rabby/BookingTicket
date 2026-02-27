@@ -4,11 +4,8 @@
 
 <style>
     /* Main container styling */
-    .container {
-        max-width: 1200px;
-        margin: 40px auto;
-        padding: 0 20px;
-    }
+   
+    
 
     /* Main card styling */
     .main-card {
@@ -252,12 +249,14 @@
             <div class="row">
                 <!-- Left Column - Search Form -->
                 <div class="col-md-6">
+                    <form asp-controller="User" asp-action="SearchTrain" method="post">
                     <div class="search-form">
+                       
                         <div class="form-title">
                             <i class="fas fa-search"></i>
                             Search Tickets
                         </div>
-
+                      
                         <!-- From - To Station Row -->
                         <div class="station-row">
                             <div class="station-item">
@@ -265,7 +264,7 @@
                                     <i class="fas fa-circle-dot"></i>
                                     From
                                 </div>
-                                <input class="form-control" placeholder="from station" />
+                                    <input class="form-control" name="from_station" placeholder="from station" />
                             </div>
 
                             <div class="swap-btn">
@@ -279,7 +278,7 @@
                                     <i class="fas fa-location-dot"></i>
                                     To
                                 </div>
-                                <input class="form-control" placeholder="to station" />
+                                    <input class="form-control" name="to_station" placeholder="to station" />
                             </div>
                         </div>
 
@@ -290,7 +289,7 @@
                                     <i class="fas fa-calendar"></i>
                                     Journey Date
                                 </div>
-                                <input class="form-control" type="date" />
+                                    <input class="form-control" name="findDate" id="date" type="date" />
                             </div>
                             <div class="details-item">
                                 <div class="station-label">
@@ -310,12 +309,14 @@
 
                         <!-- Search Button -->
                         <div class="search-btn-container">
-                            <button class="btn-search">
+                            <button type="submit" class="btn-search">
                                 <i class="fas fa-magnifying-glass"></i>
                                 Search Trains
                             </button>
                         </div>
+                        
                     </div>
+                    </form>
                 </div>
 
                 <!-- Right Column - Train Image (কোন কার্ড নেই, শুধু ইমেজ) -->
@@ -341,3 +342,13 @@
     <div class="col-md-4">
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    var today=new Date();
+    var maxday= new Date();
+    maxday.setDate(today.getDate()+10);
+
+     $('#date').attr('min',today.toISOString().split("T")[0])
+     $('#date').attr('max',maxday.toISOString().split("T")[0])
+
+</script>

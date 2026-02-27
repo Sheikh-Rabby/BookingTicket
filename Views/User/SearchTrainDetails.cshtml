@@ -1,0 +1,1004 @@
+﻿@* @model TrainBooking.Models.SearchTrainViewModel
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
+    /* .container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 20px;
+    } */
+
+    /* Header Card */
+    .header-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .route-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .route-stations {
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+    }
+
+        .route-stations span {
+            color: #f57c00;
+            margin: 0 5px;
+        }
+
+    .modify-search {
+        background: #f57c00;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid #f57c00;
+    }
+
+        .modify-search:hover {
+            background: #e65100;
+        }
+
+    /* Train Card */
+    .train-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    /* Train Header */
+    .train-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .train-title h2 {
+        font-size: 24px;
+        font-weight: 600;
+        color: #f57c00;
+        margin: 0;
+    }
+
+        .train-title h2 small {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+            margin-left: 5px;
+        }
+
+    .booking-info {
+        font-size: 13px;
+        color: #28a745;
+        margin-top: 5px;
+    }
+
+    .train-details-link {
+        color: #009688;
+        font-weight: 600;
+        cursor: pointer;
+        padding: 8px 16px;
+        border-radius: 20px;
+        background: #f8f9fa;
+        font-size: 14px;
+    }
+
+        .train-details-link:hover {
+            background: #e9ecef;
+        }
+
+    /* Journey Timeline */
+    .train-time-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 25px 0;
+        padding: 0 10px;
+    }
+
+    .time-box {
+        text-align: left;
+    }
+
+        .time-box.right {
+            text-align: right;
+        }
+
+    .time {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .station {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .duration {
+        text-align: center;
+        flex: 1;
+        margin: 0 30px;
+        position: relative;
+    }
+
+        .duration .line {
+            height: 2px;
+            background: #ddd;
+            margin: 8px 0;
+            position: relative;
+        }
+
+            .duration .line::before,
+            .duration .line::after {
+                content: '';
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #999;
+                top: -3px;
+            }
+
+            .duration .line::before {
+                left: 0;
+            }
+
+            .duration .line::after {
+                right: 0;
+            }
+
+        .duration span {
+            font-size: 13px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+    /* Classes Section - Smaller Cards */
+    .class-section {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .class-card {
+        flex: 1;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        max-width: 200px;
+    }
+
+        .class-card.special {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+    .class-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .class-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .class-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .price-note {
+        font-size: 10px;
+        color: #f57c00;
+        font-weight: 400;
+        margin-left: 3px;
+    }
+
+    .vat-info {
+        font-size: 10px;
+        color: #f57c00;
+        margin: -2px 0 5px;
+        font-style: italic;
+    }
+
+    .available-text {
+        font-size: 10px;
+        color: #666;
+        margin: 5px 0 3px;
+    }
+
+    .ticket-count {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        display: block;
+        margin: 3px 0 8px;
+    }
+
+    .book-btn {
+        background: #009688;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        font-size: 12px;
+        transition: background 0.2s;
+    }
+
+        .book-btn:hover {
+            background: #00796b;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .route-info
+
+    {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .class-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .class-card {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .train-time-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .time-box, .time-box.right {
+        text-align: center;
+    }
+
+    .duration {
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="container">
+    <!-- Header Card -->
+    <div class="header-card">
+        <div class="route-info">
+            <div class="route-stations">
+                <span>Dhaka</span> → <span>Tarakandi</span>
+            </div>
+            <button class="modify-search">Modify Search</button>
+        </div>
+    </div>
+
+    <!-- Train Cards -->
+    @foreach (var train in Model.TrainDetails)
+    {
+        <div class="train-card">
+            <!-- Train Header -->
+            <div class="train-header">
+                <div class="train-title">
+                    <h2>@train.TrainName <small>(@train.TrainName)</small></h2>
+                    <div class="booking-info">0+ users are trying to book ticket(s)</div>
+                </div>
+                <div class="train-details-link">Train Details</div>
+            </div>
+
+            <!-- Journey Timeline -->
+            <div class="train-time-section">
+                <div class="time-box">
+                    <div class="time">09 MAR, 10:00 AM</div>
+                    <div class="station">Dhaka</div>
+                </div>
+
+                <div class="duration">
+                    <div class="line"></div>
+                    <span>05h 42m</span>
+                </div>
+
+                <div class="time-box right">
+                    <div class="time">09 MAR, 03:42 PM</div>
+                    <div class="station">Tarakandi</div>
+                </div>
+            </div>
+
+            <!-- Classes Section - Smaller Cards -->
+            <div class="class-section">
+                @for (int i = 0; i < train.ClassName.Count; i++)
+                {
+                    var className = train.ClassName[i];
+                    var isSpecial = className == "SNIGDHA";
+                    var price = train.Price[i];
+
+                    <div class="class-card @(isSpecial ? "special" : "")">
+                        <div class="class-header">
+                            <span class="class-name">@className</span>
+                            <span class="class-price">
+                                ৳@price
+                                @if (isSpecial)
+                                {
+                                    <span class="price-note">+ VAT</span>
+                                }
+                            </span>
+                        </div>
+
+                        @if (isSpecial)
+                        {
+                            <div class="vat-info">Including VAT</div>
+                        }
+
+                        <div class="available-text">Available Tickets (Counter + Online)</div>
+                        <span class="ticket-count">30</span>
+                        <button class="book-btn">BOOK NOW</button>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div> *@
+
+@model TrainBooking.Models.SearchTrainViewModel
+
+@{
+    var trainBogie = Model.TrainBogie.FirstOrDefault();
+}
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
+   
+
+    /* Header Card */
+    .header-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .route-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .route-stations {
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+    }
+
+        .route-stations span {
+            color: #f57c00;
+            margin: 0 5px;
+        }
+
+    .modify-search {
+        background: #f57c00;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid #f57c00;
+    }
+
+        .modify-search:hover {
+            background: #e65100;
+        }
+
+    /* Train Card */
+    .train-card {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    /* Train Header - Always Visible */
+    .train-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: white;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-bottom: 2px solid transparent;
+    }
+
+        .train-header:hover {
+            background: #f8f9fa;
+        }
+
+        .train-header.active {
+            border-bottom-color: #f57c00;
+            background: #fff8f0;
+        }
+
+    .train-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .train-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f57c00;
+            margin: 0;
+        }
+
+            .train-title h2 small {
+                font-size: 14px;
+                color: #666;
+                font-weight: 400;
+                margin-left: 5px;
+            }
+
+    .booking-info {
+        font-size: 12px;
+        color: #28a745;
+        background: #e8f5e9;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .dropdown-icon {
+        color: #666;
+        font-size: 20px;
+        transition: transform 0.3s;
+        margin-right: 10px;
+    }
+
+    .train-header.active .dropdown-icon {
+        transform: rotate(180deg);
+        color: #f57c00;
+    }
+
+    /* Train Details - Hidden by default */
+    .train-details {
+        display: none;
+        padding: 20px;
+        border-top: 1px solid #e0e0e0;
+        background: #fafafa;
+    }
+
+        .train-details.show {
+            display: block;
+        }
+
+    /* Journey Timeline */
+    .train-time-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0 20px 0;
+        padding: 0 10px;
+    }
+
+    .time-box {
+        text-align: left;
+    }
+
+        .time-box.right {
+            text-align: right;
+        }
+
+    .time {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .station {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .duration {
+        text-align: center;
+        flex: 1;
+        margin: 0 30px;
+        position: relative;
+    }
+
+        .duration .line {
+            height: 2px;
+            background: #ddd;
+            margin: 8px 0;
+            position: relative;
+        }
+
+            .duration .line::before,
+            .duration .line::after {
+                content: '';
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #999;
+                top: -3px;
+            }
+
+            .duration .line::before {
+                left: 0;
+            }
+
+            .duration .line::after {
+                right: 0;
+            }
+
+        .duration span {
+            font-size: 13px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+    /* Classes Section - Smaller Cards */
+    .class-section {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .class-card {
+        flex: 1;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        max-width: 200px;
+    }
+
+        .class-card.special {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+    .class-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .class-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .class-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .price-note {
+        font-size: 10px;
+        color: #f57c00;
+        font-weight: 400;
+        margin-left: 3px;
+    }
+
+    .vat-info {
+        font-size: 10px;
+        color: #f57c00;
+        margin: -2px 0 5px;
+        font-style: italic;
+    }
+
+    .available-text {
+        font-size: 10px;
+        color: #666;
+        margin: 5px 0 3px;
+    }
+
+    .ticket-count {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        display: block;
+        margin: 3px 0 8px;
+    }
+    .statusBox{
+        width:20px;
+        height:20px;
+        background: white;
+        border: 1px solid black;
+        border-radius:5px
+    }
+
+    .statusBox1 {
+        width: 20px;
+        height: 20px;
+        background: #151854;
+        color: #151854;
+        border-radius: 5px
+    }
+
+    .statusBox2 {
+        width: 20px;
+        height: 20px;
+        background: #5bb450;
+        border-radius: 5px
+    }
+
+    .statusBox3 {
+        width: 20px;
+        height: 20px;
+        background: #f57c00;
+        border-radius: 5px
+    }
+
+    .seat-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+       border-radius: 10px;
+        
+       
+    }
+
+    .seat-checkbox {
+        position: relative;
+        width: 100%;
+        aspect-ratio: 1;
+    }
+
+        .seat-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .seat-checkbox .seat-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: #f8f9fa;
+            border: 2px solid #e0e0e0;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .seat-checkbox input[type="checkbox"]:checked + .seat-label {
+            background: #151854;
+            background: #151854;
+            color: white;
+        }
+
+       /*  .seat-checkbox input[type="checkbox"]:hover + .seat-label {
+            border-color: #151854;
+            background: #fff3e0;
+        } */
+    
+
+
+    .seat_containar{
+        width:400px;
+        border: 1px solid #666362;
+        margin-left:11px;
+        padding:40px;
+        margin-top:30px
+        
+    }
+
+    .book-btn {
+        background: #009688;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        font-size: 12px;
+        transition: background 0.2s;
+    }
+
+        .book-btn:hover {
+            background: #00796b;
+        }
+
+    /* Responsive */
+    @@media (max-width: 768px) {
+        .route-info
+
+    {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .train-title {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    .class-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .class-card {
+        max-width: 100%;
+        width: 100%;
+    }
+
+    .train-time-section {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .time-box, .time-box.right {
+        text-align: center;
+    }
+
+    .duration {
+        margin: 10px 0;
+        width: 100%;
+    }
+
+    }
+</style>
+
+<div class="container">
+    <!-- Header Card -->
+    <div class="header-card">
+        <div class="route-info">
+            
+                <div class="route-stations">
+                <span>@Model.TrainDetails.FirstOrDefault().from_station</span> → <span>@Model.TrainDetails.FirstOrDefault().to_station</span>
+                </div>
+            
+            
+            <a href="/User/SearchTrain" class="modify-search">Modify Search</a>
+        </div>
+    </div>
+
+    <!-- Train Cards with Dropdown -->
+    @foreach (var train in Model.TrainDetails)
+    {
+        <div class="train-card">
+            <!-- Train Header - Clickable Dropdown -->
+            <div class="train-header" onclick="toggleTrainDetails(this)">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="dropdown-icon">▼</span>
+                    <div class="train-title">
+                        <h2>@train.TrainName <small>(@train.TrainName)</small></h2>
+                        <span class="booking-info">0+ users are trying to book ticket(s)</span>
+                    </div>
+                </div>
+                <div class="train-details-link">Train Details</div>
+            </div>
+          
+            <!-- Train Details - Hidden by default -->
+            <div class="train-details">
+                <!-- Journey Timeline -->
+                <div class="train-time-section">
+                    <div class="time-box">
+                        <div class="time">09 MAR, 10:00 AM</div>
+                        <div class="station">Dhaka</div>
+                    </div>
+
+                    <div class="duration">
+                        <div class="line"></div>
+                        <span>05h 42m</span>
+                    </div>
+
+                    <div class="time-box right">
+                        <div class="time">09 MAR, 03:42 PM</div>
+                        <div class="station">Tarakandi</div>
+                    </div>
+                </div>
+                <hr />
+
+                <!-- Classes Section -->
+                <div class="class-section">
+                    @for (int i = 0; i < train.ClassName.Count; i++)
+                    {
+                        var className = train.ClassName[i];
+                        var isSpecial = className == "SNIGDHA";
+                        var price = train.Price[i];
+
+                        <div class="class-card @(isSpecial ? "special" : "")">
+                            <div class="class-header">
+                                <span class="class-name">@className</span>
+                                <span class="class-price">৳@price</span>
+                            </div>
+                            <div class="vat-info">Including VAT</div>
+                            <div class="available-text">Available Tickets (Counter + Online)</div>
+                            <span class="ticket-count">30</span>
+                            <button class="book-btn">BOOK NOW</button>
+                            
+                        </div>
+                       
+                    }
+                </div>
+               
+                <div class="seatDetails mt-4">
+                    <hr />
+                    <div class="status">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="fw-bold">Select Coach</label>
+                               
+
+
+                                @foreach ( var bogie in Model.TrainBogie.Where(b => b.TrainName == train.TrainName))
+                                {
+                                   
+                                    <select class="form-select" onchange="console.log(this.value)">
+                                        @for (int i = 0; i < bogie.BogieName.Count; i++)
+                                        {
+                                            <option value="@bogie.BogieId[i]">@bogie.BogieName[i]</option>
+                                        }
+                                    </select>
+                                }
+
+                                      
+                            </div>
+                        </div>
+                        <div class="row mt-3">
+                            
+                                <div class="d-flex gap-2 align-items-center">
+                                    <div class="statusBox"></div>
+                                    <span>Available</span>
+                                    <div class="statusBox1"></div>
+                                    <span>Selected</span>
+                                    <div class="statusBox2"></div>
+                                    <span>In Progress</span>
+                                    <div class="statusBox3"></div>
+                                    <span>Booked</span>
+                                </div>
+                                <div class="seat_containar">
+
+                                
+                                <div class="seat-grid ">
+                                    <!-- CHA-1 to CHA-40 manually -->
+                                     
+                                        
+                                    @* <div class="seat-checkbox">
+                                        <input type="checkbox" id="seat38">
+                                        <label for="seat38" class="seat-label">CHA-38</label>
+                                    </div>
+                                    <div class="seat-checkbox">
+                                        <input type="checkbox" id="seat39">
+                                        <label for="seat39" class="seat-label">CHA-39</label>
+                                    </div>
+                                    <div class="seat-checkbox">
+                                        <input type="checkbox" id="seat40">
+                                        <label for="seat40" class="seat-label">CHA-40</label>
+                                    </div> *@
+
+                                    
+                                   </div>
+                            </div>
+                            <div>
+                                <p>Coach : </p>
+                            </div>
+
+                                
+                            </div>
+                        </div>
+                      
+                    </div>
+                </div>
+            
+        </div>
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    function toggleTrainDetails(header) {
+        // Toggle active class on header
+        header.classList.toggle('active');
+
+        // Get the details div (next element)
+        var details = header.nextElementSibling;
+
+        // Toggle show class
+        details.classList.toggle('show');
+
+       
+        var allHeaders = document.querySelectorAll('.train-header');
+
+        
+    }
+
+    @* var maxcheckbox = document.getElementsByClassName('seat-checkbox')
+    maxcheckbox.value('maximun'=4) *@
+
+         $(document).ready(function(){
+
+        $('.seat-checkbox input[type="checkbox"]').on('change', function(){
+
+            let maxSeat = 4;
+            let checkedCount = $('.seat-checkbox input[type="checkbox"]:checked').length;
+
+            if (checkedCount > maxSeat) {
+                $(this).prop('checked', false);
+                alert("You can select maximum 4 seats only!");
+            }
+
+        });
+
+    });
+
+    // Optional: Open first train by default
+    window.onload = function() {
+        
+         var firstTrain = document.querySelector('.train-header');
+         if(firstTrain) {
+            firstTrain.classList.add('active');
+            firstTrain.nextElementSibling.classList.add('show');
+        }
+    }
+</script>
