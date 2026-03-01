@@ -380,9 +380,7 @@
 
 @model TrainBooking.Models.SearchTrainViewModel
 
-@{
-    var trainBogie = Model.TrainBogie.FirstOrDefault();
-}
+
 <style>
     * {
         margin: 0;
@@ -814,7 +812,7 @@
         <div class="route-info">
             
                 <div class="route-stations">
-                <span>@Model.TrainDetails.FirstOrDefault().from_station</span> → <span>@Model.TrainDetails.FirstOrDefault().to_station</span>
+                 <span>@Model.Trains.FirstOrDefault().from_station</span> → <span>@Model.Trains.FirstOrDefault().to_station</span> 
                 </div>
             
             
@@ -823,15 +821,17 @@
     </div>
 
     <!-- Train Cards with Dropdown -->
-    @foreach (var train in Model.TrainDetails)
+    @foreach (var train in Model.Trains) 
     {
+       
+
         <div class="train-card">
             <!-- Train Header - Clickable Dropdown -->
             <div class="train-header" onclick="toggleTrainDetails(this)">
                 <div style="display: flex; align-items: center; gap: 10px;">
                     <span class="dropdown-icon">▼</span>
                     <div class="train-title">
-                        <h2>@train.TrainName <small>(@train.TrainName)</small></h2>
+                        <h2>@train.trainName <small>(@train.trainName)</small></h2>
                         <span class="booking-info">0+ users are trying to book ticket(s)</span>
                     </div>
                 </div>
@@ -861,13 +861,12 @@
 
                 <!-- Classes Section -->
                 <div class="class-section">
-                    @for (int i = 0; i < train.ClassName.Count; i++)
-                    {
-                        var className = train.ClassName[i];
-                        var isSpecial = className == "SNIGDHA";
-                        var price = train.Price[i];
 
-                        <div class="class-card @(isSpecial ? "special" : "")">
+                    @for (int i = 0; i < train.Classes.Count;i++)
+                    {
+                        var className = train.Classes[i].className;
+                        var price = train.Classes[i].price;
+                        <div class="class-card">
                             <div class="class-header">
                                 <span class="class-name">@className</span>
                                 <span class="class-price">৳@price</span>
@@ -876,10 +875,10 @@
                             <div class="available-text">Available Tickets (Counter + Online)</div>
                             <span class="ticket-count">30</span>
                             <button class="book-btn">BOOK NOW</button>
-                            
                         </div>
                        
                     }
+                   
                 </div>
                
                 <div class="seatDetails mt-4">
@@ -889,18 +888,13 @@
                             <div class="col-md-4">
                                 <label class="fw-bold">Select Coach</label>
                                
-
-
-                                @foreach ( var bogie in Model.TrainBogie.Where(b => b.TrainName == train.TrainName))
-                                {
-                                   
-                                    <select class="form-select" onchange="console.log(this.value)">
-                                        @for (int i = 0; i < bogie.BogieName.Count; i++)
-                                        {
-                                            <option value="@bogie.BogieId[i]">@bogie.BogieName[i]</option>
-                                        }
+                                    <select class="form-select bogie-select" data-trainid="@train.trainId">
+                                    @foreach (var bogie in train.Bogies)
+                                    {
+                                        <option value="@bogie.bogieID">@bogie.bogieName</option>
+                                    }
                                     </select>
-                                }
+                                
 
                                       
                             </div>
@@ -922,9 +916,22 @@
                                 
                                 <div class="seat-grid ">
                                     <!-- CHA-1 to CHA-40 manually -->
-                                     
-                                        
-                                    @* <div class="seat-checkbox">
+                                    @foreach (var bogie in train.Bogies)
+                                    {
+                                        @foreach (var seat in bogie.Seats)
+                                        {
+                                            <div class="seat-checkbox">
+                                                <input type="checkbox"
+                                                       id="seat_@seat.seatID"
+                                                       value="@seat.seatID">
+                                                <label for="seat_@seat.seatID" class="seat-label">
+                                                    @seat.seatName
+                                                </label>
+                                            </div>
+                                        }
+                                    }
+                                  @* 
+                                    <div class="seat-checkbox">
                                         <input type="checkbox" id="seat38">
                                         <label for="seat38" class="seat-label">CHA-38</label>
                                     </div>
@@ -958,45 +965,38 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 <script>
     function toggleTrainDetails(header) {
-        // Toggle active class on header
         header.classList.toggle('active');
-
-        // Get the details div (next element)
         var details = header.nextElementSibling;
-
-        // Toggle show class
         details.classList.toggle('show');
-
-       
         var allHeaders = document.querySelectorAll('.train-header');
-
-        
     }
 
-    @* var maxcheckbox = document.getElementsByClassName('seat-checkbox')
-    maxcheckbox.value('maximun'=4) *@
+    // ❌ Ei 2 line remove kora hoyeche - wrong syntax chilo
+    // var maxcheckbox = document.getElementsByClassName('seat-checkbox')
+    // maxcheckbox.value('maximun'=4)
 
-         $(document).ready(function(){
-
+    $(document).ready(function(){
         $('.seat-checkbox input[type="checkbox"]').on('change', function(){
-
             let maxSeat = 4;
             let checkedCount = $('.seat-checkbox input[type="checkbox"]:checked').length;
-
             if (checkedCount > maxSeat) {
                 $(this).prop('checked', false);
                 alert("You can select maximum 4 seats only!");
             }
-
         });
-
     });
 
-    // Optional: Open first train by default
+    $('.bogie-select').on('change',function(){
+        var selected=$(this).val()
+        var trainId=$(this).data('trainid')
+        console.log(selected)
+        console.log(trainId)
+    })
+
+
     window.onload = function() {
-        
-         var firstTrain = document.querySelector('.train-header');
-         if(firstTrain) {
+        var firstTrain = document.querySelector('.train-header');
+        if(firstTrain) {
             firstTrain.classList.add('active');
             firstTrain.nextElementSibling.classList.add('show');
         }

@@ -27,57 +27,83 @@ namespace Layout.Controllers
             return View();
         }
 
+        //public async Task<IActionResult> TrainSeatByBogie(SearchTrain searchTrain)
+        //{
+        //    var train = await _trainRepository.TrainSeatByBogie(searchTrain);
+        //    return Json(train);
+        //}
+
 
         [HttpPost]
         public async Task<IActionResult> SearchTrain(SearchTrain searchTrain)
         {
-            var trains = await _trainRepository.SearchTrain(searchTrain);
-            var route=trains.TrainDetails.Select(t =>new TrainClassGroup 
-            { 
-                from_station= t.from_station,
-                to_station= t.to_station 
-            }).FirstOrDefault();
-
-            var classGroup = trains.TrainDetails.GroupBy(t => t.trainName).Select(g => new TrainClassGroup
+            
+            var result = await _trainRepository.SearchTrain(searchTrain);
+            var allTrains = result.Trains.ToList();
+            var allBogies = result.Bogies.ToList();
+            var allSeats = result.Seats.ToList();
+            foreach (var seat in allSeats)
             {
-                TrainName = g.Key,
-                Id=g.Select(t=>t.id).ToList(),
-                ClassName = g.Select(t => t.ClassName).ToList(),
-                Price = g.Select(t => t.price).ToList(),
-                from_station=g.First().from_station,
-                to_station=g.First().to_station
+                Console.WriteLine($"seat.bogieID: '{seat.bogieID}'");
+            }
 
-
-            }).ToList();
-           
-
-            var bogiegroup = trains.TrainBogie.GroupBy(tb => tb.trainName).Select(g => new BogieGroup
+            // ✅ BogieID print koro
+            foreach (var bogie in allBogies)
             {
-                TrainName=g.Key,
-                BogieId=g.Select(tb=>tb.bogieID).ToList(),
-                BogieName=g.Select(tb=>tb.bogieName).ToList(),
-                ClassId = g.Select(tb => tb.ClassID).ToList()
-            }).ToList();
-            var TrainBogieSeat = trains.TrainBogieSeat.GroupBy(ts => ts.bogieID).Select(g => new SeatGroup
-            {
-                BogieID = g.Key,
-                SeatID = g.Select(ts => ts.seatID).ToList(),
-                SeatName = g.Select(ts => ts.seatName).ToList(),
-                BogieName=g.Select(ts=>ts.bogieName).ToList(),
-                ClassId = g.Select(ts => ts.ClassID).ToList()
+                Console.WriteLine($"bogie.bogieID: '{bogie.bogieID}'");
+            }
 
-            }).ToList();
-
-            var model = new SearchTrainViewModel
+            var viewModel = new SearchTrainViewModel
             {
-                TrainDetails = classGroup,
-                TrainBogie = bogiegroup,
-                TrainBogieSeat = TrainBogieSeat,
-                //TrainDetails =route
+                Trains = result.Trains
+                    .GroupBy(t => t.trainId)
+                    .Select(g => new TrainViewModel
+                    {
+                        trainId = g.Key,
+                        trainName = g.First().trainName,
+                        from_station = g.First().from_station,
+                        to_station = g.First().to_station,
+
+
+                        Classes = g.Select(x => new TrainClassViewModel
+                        {
+                            classID = x.classID,
+                            className = x.className,
+                            price = x.price
+                        }).ToList(),
+
+
+                        Bogies = result.Bogies
+                            .Where(b => b.trainId == g.Key)
+                            .GroupBy(b => b.bogieID)
+                            .Select(bg => new BogieViewModel
+                            {
+                                bogieID = bg.Key,
+                                bogieName = bg.First().bogieName,
+                                classID = bg.First().classID,
+                                className = bg.First().className,
+
+
+
+                                Seats = result.Seats
+                                    .Where(s => s.bogieID == bg.Key.Trim())
+                                    .Select(s => new SeatViewModel
+                                    {
+                                       
+                                        seatID = s.seatID,
+                                        seatName = s.seatName
+                                    }).ToList()
+                                 
+                            }).ToList()
+
+                    }).ToList()
             };
+            var testBogie = viewModel.Trains.FirstOrDefault()?.Bogies.FirstOrDefault();
+            Console.WriteLine($"BogieID: {testBogie?.bogieID} | Seats Count: {testBogie?.Seats.Count}");
 
 
-            return View("SearchTrainDetails", model);
+            return View("SearchTrainDetails", viewModel);
         }
+
     }
 }

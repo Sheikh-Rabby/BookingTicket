@@ -4,6 +4,7 @@ namespace TrainBooking.Data
 {
     public interface ITrainRepository
     {
-        Task <SearchTrainDetails> SearchTrain(SearchTrain searchTrain);
+        Task <SearchTrainResult> SearchTrain(SearchTrain searchTrain);
+        //Task<IEnumerable<TrainDetailDto>> TrainSeatByBogie(SearchTrain searchTrain);
     }
 }

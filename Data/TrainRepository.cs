@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Layout.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Data;
 using System.Data.SqlClient;
@@ -21,7 +22,7 @@ namespace TrainBooking.Data
 
 
         [HttpPost]
-        public async Task<SearchTrainDetails> SearchTrain(SearchTrain searchTrain)
+        public async Task<SearchTrainResult> SearchTrain(SearchTrain searchTrain)
         {
             using var connection = CreateConnection();
             var trains = await connection.QueryMultipleAsync(
@@ -36,21 +37,34 @@ namespace TrainBooking.Data
 
                 );
 
+            var trainDetails = (await trains.ReadAsync<TrainDetailDto>()).ToList();
+            var trainBogie = (await trains.ReadAsync<BogieDto>()).ToList();
+            var trainBogieSeat = (await trains.ReadAsync<SeatDto>()).ToList();
 
-
-            var trainDetails = (await trains.ReadAsync<TrainDetailsDto>()).ToList();
-            var trainBogie = (await trains.ReadAsync<TrainDetailsDto>()).ToList();
-            var trainBogieSeat = (await trains.ReadAsync<TrainDetailsDto>()).ToList();
-
-            var result = new SearchTrainDetails
+            var result = new SearchTrainResult
             {
-                TrainDetails = trainDetails,
-                TrainBogie = trainBogie,
-                TrainBogieSeat = trainBogieSeat
+                Trains = trainDetails,
+                Bogies = trainBogie,
+                Seats = trainBogieSeat
             };
 
             return result;
 
         }
+        //public async Task<IEnumerable<TrainDetailsDto>> TrainSeatByBogie(SearchTrain searchTrain)
+        //{
+        //    using var connection = CreateConnection();
+        //    var trains = await connection.QueryAsync<TrainDetailsDto>(
+        //        "dbo.TrainSeatByBogie", 
+        //        new 
+        //        {   @from_station=searchTrain.from_station,
+        //            @to_station=searchTrain.to_station,
+        //            @findDate=searchTrain.findDate,
+        //            @trainName=searchTrain.trainName
+        //        },
+        //        commandType: CommandType.StoredProcedure
+        //        );
+        //    return trains;
+        //}
     }
 }
