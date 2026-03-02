@@ -27,11 +27,13 @@ namespace Layout.Controllers
             return View();
         }
 
-        //public async Task<IActionResult> TrainSeatByBogie(SearchTrain searchTrain)
-        //{
-        //    var train = await _trainRepository.TrainSeatByBogie(searchTrain);
-        //    return Json(train);
-        //}
+        public async Task<IActionResult> TrainSeatByBogie(string bogieId, string trainId)
+        {
+            var Seats = await _trainRepository.TrainSeatByBogie(bogieId, trainId);
+            return Json(Seats);
+        }
+
+
 
 
         [HttpPost]
@@ -39,20 +41,9 @@ namespace Layout.Controllers
         {
             
             var result = await _trainRepository.SearchTrain(searchTrain);
-            var allTrains = result.Trains.ToList();
-            var allBogies = result.Bogies.ToList();
-            var allSeats = result.Seats.ToList();
-            foreach (var seat in allSeats)
-            {
-                Console.WriteLine($"seat.bogieID: '{seat.bogieID}'");
-            }
-
-            // ✅ BogieID print koro
-            foreach (var bogie in allBogies)
-            {
-                Console.WriteLine($"bogie.bogieID: '{bogie.bogieID}'");
-            }
-
+            TempData["ClassId"] = searchTrain.className;
+            
+            
             var viewModel = new SearchTrainViewModel
             {
                 Trains = result.Trains
@@ -98,10 +89,7 @@ namespace Layout.Controllers
 
                     }).ToList()
             };
-            var testBogie = viewModel.Trains.FirstOrDefault()?.Bogies.FirstOrDefault();
-            Console.WriteLine($"BogieID: {testBogie?.bogieID} | Seats Count: {testBogie?.Seats.Count}");
-
-
+            
             return View("SearchTrainDetails", viewModel);
         }
 

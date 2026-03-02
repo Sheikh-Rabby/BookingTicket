@@ -8,6 +8,7 @@ namespace TrainBooking.Models
         public string? to_station { get; set; }
         public DateTime? findDate { get; set; }
         public string? trainName { get; set; }
+        public string? className { get; set; }
     }
 
     public class TrainDetailDto

@@ -51,20 +51,19 @@ namespace TrainBooking.Data
             return result;
 
         }
-        //public async Task<IEnumerable<TrainDetailsDto>> TrainSeatByBogie(SearchTrain searchTrain)
-        //{
-        //    using var connection = CreateConnection();
-        //    var trains = await connection.QueryAsync<TrainDetailsDto>(
-        //        "dbo.TrainSeatByBogie", 
-        //        new 
-        //        {   @from_station=searchTrain.from_station,
-        //            @to_station=searchTrain.to_station,
-        //            @findDate=searchTrain.findDate,
-        //            @trainName=searchTrain.trainName
-        //        },
-        //        commandType: CommandType.StoredProcedure
-        //        );
-        //    return trains;
-        //}
+        public async Task<IEnumerable<SeatViewModel>> TrainSeatByBogie(string bogieId, string trainId)
+        {
+            using var connection = CreateConnection();
+            var Seats = await connection.QueryAsync<SeatViewModel>(
+                "dbo.TrainSeatByBogie",
+                new
+                {
+                   bogieId=bogieId,
+                   trainId=trainId
+                },
+                commandType: CommandType.StoredProcedure
+                );
+            return Seats;
+        }
     }
 }

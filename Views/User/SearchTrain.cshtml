@@ -296,14 +296,16 @@
                                     <i class="fas fa-chair"></i>
                                     Class
                                 </div>
-                                <select class="form-select">
+                                <select class="form-select" id="class_select">
                                     <option value="" selected disabled>Select Class</option>
                                     <option value="1">AC Sleeper</option>
-                                    <option value="2">AC Chair</option>
+                                    <option value="Ac">AC</option>
                                     <option value="3">Non-AC Sleeper</option>
-                                    <option value="4">Non-AC Chair</option>
+                                    <option value="Ac">Non-AC Chair</option>
                                     <option value="5">Shovon</option>
+                                    <option value="Schair">Schair</option>
                                 </select>
+                                  <input type="hidden" name="className" id="className"/>
                             </div>
                         </div>
 
@@ -350,5 +352,10 @@
 
      $('#date').attr('min',today.toISOString().split("T")[0])
      $('#date').attr('max',maxday.toISOString().split("T")[0])
+
+     $('#class_select').on('change',function(){
+         var selected=$(this).val()
+         $('#className').val(selected)
+     })
 
 </script>
