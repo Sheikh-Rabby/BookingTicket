@@ -65,5 +65,21 @@ namespace TrainBooking.Data
                 );
             return Seats;
         }
+
+
+        public async Task<IEnumerable<BogieViewModel>> TrainBogieByClass(string classId, string trainId)
+        {
+            using var connection = CreateConnection();
+            var bogie = await connection.QueryAsync<BogieViewModel>(
+                "dbo.trainBogieByClass",
+                new
+                {
+                    classId = classId,
+                    trainId = trainId
+                },
+                commandType: CommandType.StoredProcedure
+                );
+            return bogie;
+        }
     }
 }

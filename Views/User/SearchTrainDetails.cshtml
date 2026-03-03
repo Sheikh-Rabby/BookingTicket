@@ -1,4 +1,4 @@
-﻿@model TrainBooking.Models.SearchTrainViewModel
+﻿@* @model TrainBooking.Models.SearchTrainViewModel
 
   @{
     var selectedClassId = TempData["ClassId"] != null ? TempData["ClassId"].ToString() : "";
@@ -484,9 +484,9 @@
                     {
                         var className = train.Classes[i].className;
                         var price = train.Classes[i].price;
-                        <div class="class-card" data-classId="@train.Classes[i].className">
+                        <div class="class-card" data-classId="@train.Classes[i].className" data-id="@train.Classes[i].classID" data-trainid="@train.trainId">
                             <div class="class-header">
-                                <span class="class-name booking-info">@className</span>
+                                <span class="class-name">@className</span>
                                 <span class="class-price">৳@price</span>
                             </div>
                             <div class="vat-info">Including VAT</div>
@@ -506,11 +506,8 @@
                                 <label class="fw-bold">Select Coach</label>
                                 <!-- ✅ Unique data-trainid -->
                                 <select class="form-select bogie-select" data-trainid="@train.trainId">
-                                   @*  <option value="">-- Select Coach --</option> *@
-                                    @foreach (var bogie in train.Bogies)
-                                    {
-                                        <option value="@bogie.bogieID" data-bogieid="@bogie.bogieID">@bogie.bogieName</option>
-                                    }
+                                   
+                                   
                                 </select>
                             </div>
                         </div>
@@ -583,35 +580,61 @@
                         html += `
                             <div class="seat-checkbox">
                                 <input type="checkbox"
-                                       id="${b.seatID}"
+                                       id="${trainId}_${bogieId}_${b.seatID}"
                                        value="${b.seatID}">
-                                <label for="${b.seatID}" class="seat-label">
+                                <label for="${trainId}_${bogieId}_${b.seatID}" class="seat-label">
                                     ${b.seatName}
                                 </label>
                             </div>`;
                     });
                 }
-               
-                
 
-                $('#seatGrid_' + trainId).html(html).show();
+
+
+                   
+                  $('#seatGrid_' + trainId).html(html).show();
+
             },
             error: function () {
                 alert('Error loading seats!');
             }
         });
     }
-    
-        $(document).on('click', '.book-btn', function () {
+
+    function loadBogie(classId,trainId){
+         
+        $.ajax({
+            url:'/User/TrainBogieByClass',
+            type:'GET',
+            data:{classId:classId,trainId:trainId},
+            success:function(response){
+                console.log(response)
+
+                var bogies=response.data || response
+                console.log('bogies response:', bogies);
+                var html=''
+                bogies.forEach(function (b){
+                    html +=`<option value="${b.bogieID}" data-bogieid="${b.bogieId}">${b.bogieName}</option>`
+                    loadSeats(b.bogieID, trainId);
+                })
+                $('.bogie-select').html(html);
+
+            }
+        })
+    }
+
+    $(document).on('click', '.book-btn', function () {
         var card = $(this).closest('.class-card');
         var seatSection = card.closest('.train-details').find('.seatDetails');
-
+        var trainId = card.data('trainid');
+    var classId = card.data('id');
         
         if (card.hasClass('active-card')) {
 
             
             card.removeClass('active-card');
             seatSection.slideUp();
+            loadBogie(classId, trainId);
 
         } else {
 
@@ -623,7 +646,7 @@
                 
                  $('.seatDetails').slideUp();
               
-
+                
             // এইটা select করবো
             card.addClass('active-card');
 
@@ -648,6 +671,13 @@
             loadSeats(bogieId, trainId);
         });
 
+           $('.class-card').on('click', function () {
+            var classId = $(this).data('id');
+            var trainId = $(this).data('trainid');
+            loadBogie(classId, trainId);
+        });
+
+
         // ✅ Max 4 Seat Select
         $(document).on('change', '.seat-checkbox input[type="checkbox"]', function () {
             let maxSeat = 4;
@@ -670,18 +700,696 @@
             return $(this).data('classid') &&
                    $(this).data('classid').toString().trim().toLowerCase() ===
                    selectedClassId.toString().trim().toLowerCase();
+                   
         });
         console.log(card)
 
         if (card.length) {
             card.addClass('active-card');  // card highlight
-            firstTrain.find('.seatDetails').slideDown(); // seat show
+            firstTrain.find('.seatDetails').slideDown();
+            var classId = card.data('id');
+             var trainId = card.data('trainid');
+             loadBogie(classId, trainId);// seat show
         }
     }
 
     });
 
     // ✅ First Train Auto Open
+    window.onload = function () {
+        var firstTrain = document.querySelector('.train-header');
+        if (firstTrain) {
+            firstTrain.classList.add('active');
+            firstTrain.nextElementSibling.classList.add('show');
+        }
+    }
+</script> *@
+@model TrainBooking.Models.SearchTrainViewModel
+
+@{
+    var selectedClassId = TempData["ClassId"] != null ? TempData["ClassId"].ToString() : "";
+}
+
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        background: #f5f5f5;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
+    }
+
+    .header-card {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+
+    .route-info {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .route-stations {
+        font-size: 18px;
+        font-weight: 500;
+        color: #333;
+    }
+
+        .route-stations span {
+            color: #f57c00;
+            margin: 0 5px;
+        }
+
+    .modify-search {
+        background: #f57c00;
+        color: white;
+        border: none;
+        padding: 10px 25px;
+        border-radius: 25px;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        border: 1px solid #f57c00;
+    }
+
+        .modify-search:hover {
+            background: #e65100;
+        }
+
+    .train-card {
+        background: white;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+
+    .train-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 20px;
+        background: white;
+        cursor: pointer;
+        transition: background 0.2s;
+        border-bottom: 2px solid transparent;
+    }
+
+        .train-header:hover {
+            background: #f8f9fa;
+        }
+
+        .train-header.active {
+            border-bottom-color: #f57c00;
+            background: #fff8f0;
+        }
+
+    .train-title {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+        .train-title h2 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #f57c00;
+            margin: 0;
+        }
+
+            .train-title h2 small {
+                font-size: 14px;
+                color: #666;
+                font-weight: 400;
+                margin-left: 5px;
+            }
+
+    .booking-info {
+        font-size: 12px;
+        color: #28a745;
+        background: #e8f5e9;
+        padding: 4px 10px;
+        border-radius: 20px;
+    }
+
+    .dropdown-icon {
+        color: #666;
+        font-size: 20px;
+        transition: transform 0.3s;
+        margin-right: 10px;
+    }
+
+    .train-header.active .dropdown-icon {
+        transform: rotate(180deg);
+        color: #f57c00;
+    }
+
+    .train-details {
+        display: none;
+        padding: 20px;
+        border-top: 1px solid #e0e0e0;
+        background: #fafafa;
+    }
+
+        .train-details.show {
+            display: block;
+        }
+
+    .train-time-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin: 0 0 20px 0;
+        padding: 0 10px;
+    }
+
+    .time-box {
+        text-align: left;
+    }
+
+        .time-box.right {
+            text-align: right;
+        }
+
+    .time {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+        margin-bottom: 5px;
+    }
+
+    .station {
+        font-size: 14px;
+        color: #666;
+    }
+
+    .duration {
+        text-align: center;
+        flex: 1;
+        margin: 0 30px;
+        position: relative;
+    }
+
+        .duration .line {
+            height: 2px;
+            background: #ddd;
+            margin: 8px 0;
+            position: relative;
+        }
+
+            .duration .line::before,
+            .duration .line::after {
+                content: '';
+                position: absolute;
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: #999;
+                top: -3px;
+            }
+
+            .duration .line::before {
+                left: 0;
+            }
+
+            .duration .line::after {
+                right: 0;
+            }
+
+        .duration span {
+            font-size: 13px;
+            color: #666;
+            background: #f8f9fa;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+    .class-section {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .class-card {
+        flex: 1;
+        background: #f8f9fa;
+        border-radius: 8px;
+        padding: 12px;
+        border: 1px solid #e0e0e0;
+        max-width: 200px;
+    }
+
+        .class-card.special {
+            background: #fff3e0;
+            border-color: #ffb74d;
+        }
+
+    .active-card {
+        background: white !important;
+        color: white !important;
+        border-color: #28a745 !important;
+        border: 3px solid #28a745 !important;
+        position: relative;
+    }
+
+        .active-card::after {
+            content: "";
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            bottom: -15px;
+            width: 0;
+            height: 0;
+            border-left: 10px solid transparent;
+            border-right: 10px solid transparent;
+            border-top: 12px solid #28a745;
+        }
+
+    .class-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+    }
+
+    .class-name {
+        font-size: 15px;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .class-price {
+        font-size: 18px;
+        font-weight: 700;
+        color: #28a745;
+    }
+
+    .vat-info {
+        font-size: 10px;
+        color: #f57c00;
+        margin: -2px 0 5px;
+        font-style: italic;
+    }
+
+    .available-text {
+        font-size: 10px;
+        color: #666;
+        margin: 5px 0 3px;
+    }
+
+    .ticket-count {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        display: block;
+        margin: 3px 0 8px;
+    }
+
+    .statusBox {
+        width: 20px;
+        height: 20px;
+        background: white;
+        border: 1px solid black;
+        border-radius: 5px;
+    }
+
+    .statusBox1 {
+        width: 20px;
+        height: 20px;
+        background: #151854;
+        border-radius: 5px;
+    }
+
+    .statusBox2 {
+        width: 20px;
+        height: 20px;
+        background: #5bb450;
+        border-radius: 5px;
+    }
+
+    .statusBox3 {
+        width: 20px;
+        height: 20px;
+        background: #f57c00;
+        border-radius: 5px;
+    }
+
+    .seat-grid {
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+        gap: 10px;
+        border-radius: 10px;
+    }
+
+    .seat-checkbox {
+        position: relative;
+        width: 100%;
+        
+        aspect-ratio: 1;
+    }
+
+        .seat-checkbox input[type="checkbox"] {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            z-index: 2;
+        }
+
+        .seat-checkbox .seat-label {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            background: white;
+            border: 1px solid black;
+            border-radius: 18px;
+            font-size: 12px;
+            font-weight: 500;
+            color: black;
+            transition: all 0.2s;
+        }
+
+        .seat-checkbox input[type="checkbox"]:checked + .seat-label {
+            background: #151854;
+            color: white;
+        }
+
+    .seat_containar {
+        width: 400px;
+        border: 1px solid #666362;
+        margin-left: 11px;
+        padding: 40px;
+        margin-top: 30px;
+    }
+
+    .book-btn {
+        background: #009688;
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-weight: 600;
+        cursor: pointer;
+        width: 100%;
+        font-size: 12px;
+        transition: background 0.2s;
+    }
+
+        .book-btn:hover {
+            background: #00796b;
+        }
+
+    @@media (max-width: 768px) {
+        .route-info {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .train-title {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 5px;
+        }
+
+        .class-section {
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .class-card {
+            max-width: 100%;
+            width: 100%;
+        }
+
+        .train-time-section {
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .time-box, .time-box.right {
+            text-align: center;
+        }
+
+        .duration {
+            margin: 10px 0;
+            width: 100%;
+        }
+    }
+</style>
+
+<div class="container">
+    <div class="header-card">
+        <div class="route-info">
+            <div class="route-stations">
+                <span>@Model.Trains.FirstOrDefault().from_station</span> → <span>@Model.Trains.FirstOrDefault().to_station</span>
+            </div>
+            <a href="/User/SearchTrain" class="modify-search">Modify Search</a>
+        </div>
+    </div>
+
+    @foreach (var train in Model.Trains)
+    {
+        <div class="train-card">
+            <div class="train-header" onclick="toggleTrainDetails(this)">
+                <div style="display: flex; align-items: center; gap: 10px;">
+                    <span class="dropdown-icon">▼</span>
+                    <div class="train-title">
+                        <h2>@train.trainName <small>(@train.trainId)</small></h2>
+                        <span class="booking-info">0+ users are trying to book ticket(s)</span>
+                    </div>
+                </div>
+                <div class="train-details-link">Train Details</div>
+            </div>
+
+            <div class="train-details">
+                <div class="train-time-section">
+                    <div class="time-box">
+                        <div class="time">09 MAR, 10:00 AM</div>
+                        <div class="station">@train.from_station</div>
+                    </div>
+                    <div class="duration">
+                        <div class="line"></div>
+                        <span>05h 42m</span>
+                    </div>
+                    <div class="time-box right">
+                        <div class="time">09 MAR, 03:42 PM</div>
+                        <div class="station">@train.to_station</div>
+                    </div>
+                </div>
+                <hr />
+
+                <div class="class-section">
+                    @for (int i = 0; i < train.Classes.Count; i++)
+                    {
+                        var className = train.Classes[i].className;
+                        var price = train.Classes[i].price;
+                        <div class="class-card" data-classId="@train.Classes[i].className" data-id="@train.Classes[i].classID" data-trainid="@train.trainId">
+                            <div class="class-header">
+                                <span class="class-name booking-info">@className</span>
+                                <span class="class-price">৳@price</span>
+                            </div>
+                            <div class="vat-info">Including VAT</div>
+                            <div class="available-text">Available Tickets (Counter + Online)</div>
+                            <span class="ticket-count">30</span>
+                            <button class="book-btn">BOOK NOW</button>
+                        </div>
+                    }
+                </div>
+
+                <div class="seatDetails mt-4" style="display:none">
+                    <hr />
+                    <div class="status">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <label class="fw-bold">Select Coach</label>
+                                <select class="form-select bogie-select" data-trainid="@train.trainId">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="row mt-3">
+                            <div class="d-flex gap-3 align-items-center">
+                                <div class="statusBox"></div>
+                                <span style="font-size: 11px;">Available</span>
+                                <div class="statusBox1"></div>
+                                <span style="font-size: 11px;">Selected</span>
+                                <div class="statusBox2"></div>
+                                <span style="font-size: 11px;">In Progress</span>
+                                <div class="statusBox3"></div>
+                                <span style="font-size: 11px;">Booked</span>
+                            </div>
+
+                            <div class="seat_containar">
+                                <div class="seat-grid" id="seatGrid_@train.trainId">
+                                </div>
+                            </div>
+
+                            @* <div class="mt-1" >
+                                <p class="">Coach : <span class="booking-info" id="coach"></span></p>
+                            </div> *@
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script>
+    function toggleTrainDetails(header) {
+        header.classList.toggle('active');
+        var details = header.nextElementSibling;
+        details.classList.toggle('show');
+    }
+
+    function loadSeats(bogieId, trainId) {
+        if (!bogieId) return;
+
+        $.ajax({
+            url: '/User/TrainSeatByBogie',
+            type: 'GET',
+            data: { bogieId: bogieId, trainId: trainId },
+            success: function (response) {
+                var seats = response.data || response;
+                var seatLength = seats.length;
+
+                // ✅ Option এ seat count update
+                var selectElement = $('.bogie-select[data-trainid="' + trainId + '"]');
+                selectElement.find('option[value="' + bogieId + '"]').each(function () {
+                    var bogieName = $(this).text().split('(')[0].trim();
+                    $(this).text(bogieName + ' (' + seatLength + ')');
+                });
+
+                var html = '';
+                seats.forEach(function (b) {
+                    html += `
+                        <div class="seat-checkbox" data-bogieid="${bogieId}" style="display:none">
+                            <input type="checkbox"
+                                   id="${trainId}_${bogieId}_${b.seatID}"
+                                   value="${b.seatID}">
+                            <label for="${trainId}_${bogieId}_${b.seatID}" class="seat-label">
+                                ${b.seatName}
+                            </label>
+                        </div>`;
+                });
+                var coach=response[0].seatName
+                var firstselection=coach.split("-")[0]
+                console.log(firstselection)
+                $('#coach').text(firstselection)
+                $('#seatGrid_' + trainId).append(html);
+            },
+            error: function () {
+                alert('Error loading seats!');
+            }
+        });
+    }
+
+    function loadBogie(classId, trainId) {
+        // ✅ আগে clear করো
+        $('#seatGrid_' + trainId).empty();
+        $('.bogie-select[data-trainid="' + trainId + '"]').empty();
+
+        $.ajax({
+            url: '/User/TrainBogieByClass',
+            type: 'GET',
+            data: { classId: classId, trainId: trainId },
+            success: function (response) {
+                var bogies = response.data || response;
+
+                var html = '';
+                bogies.forEach(function (b) {
+                    html += `<option value="${b.bogieID}">${b.bogieName}</option>`;
+                });
+
+                // ✅ আগে option set করো
+                $('.bogie-select[data-trainid="' + trainId + '"]').html(html);
+
+                // ✅ তারপর seat load করো
+                bogies.forEach(function (b) {
+                    loadSeats(b.bogieID, trainId);
+                });
+
+                // ✅ সব load হওয়ার পর প্রথম bogie show
+                var firstBogieId = bogies[0].bogieID;
+                setTimeout(function () {
+                    $('#seatGrid_' + trainId).find('.seat-checkbox').hide();
+                    $('#seatGrid_' + trainId).find('.seat-checkbox[data-bogieid="' + firstBogieId + '"]').show();
+                }, 500);
+            }
+        });
+    }
+
+    $(document).on('click', '.book-btn', function () {
+        var card = $(this).closest('.class-card');
+        var seatSection = card.closest('.train-details').find('.seatDetails');
+        var trainId = card.data('trainid');
+        var classId = card.data('id');
+
+        if (card.hasClass('active-card')) {
+            card.removeClass('active-card');
+            seatSection.slideUp();
+        } else {
+            $('.class-card').removeClass('active-card');
+            $('.seatDetails').slideUp();
+            card.addClass('active-card');
+            seatSection.slideDown();
+            loadBogie(classId, trainId);
+        }
+    });
+
+    $(document).ready(function () {
+
+        // ✅ Bogie Change এ filter
+        $(document).on('change', '.bogie-select', function () {
+            var bogieId = $(this).val();
+            var trainId = $(this).data('trainid');
+            $('#seatGrid_' + trainId).find('.seat-checkbox').hide();
+            $('#seatGrid_' + trainId).find('.seat-checkbox[data-bogieid="' + bogieId + '"]').show();
+        });
+
+        // ✅ Max 4 Seat Select
+        $(document).on('change', '.seat-checkbox input[type="checkbox"]', function () {
+            let maxSeat = 4;
+            let checkedCount = $('.seat-checkbox input[type="checkbox"]:checked').length;
+            if (checkedCount > maxSeat) {
+                $(this).prop('checked', false);
+                alert("You can select maximum 4 seats only!");
+            }
+        });
+
+        var selectedClassId = '@selectedClassId';
+
+        if (selectedClassId) {
+            var firstTrain = $('.train-card').first();
+            $('.class-card').removeClass('active-card');
+            $('.seatDetails').hide();
+            var card = firstTrain.find('.class-card').filter(function () {
+                return $(this).data('classid') &&
+                    $(this).data('classid').toString().trim().toLowerCase() ===
+                    selectedClassId.toString().trim().toLowerCase();
+            });
+
+            if (card.length) {
+                card.addClass('active-card');
+                firstTrain.find('.seatDetails').slideDown();
+                var classId = card.data('id');
+                var trainId = card.data('trainid');
+                loadBogie(classId, trainId);
+            }
+        }
+    });
+
     window.onload = function () {
         var firstTrain = document.querySelector('.train-header');
         if (firstTrain) {

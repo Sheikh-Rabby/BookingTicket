@@ -32,6 +32,11 @@ namespace Layout.Controllers
             var Seats = await _trainRepository.TrainSeatByBogie(bogieId, trainId);
             return Json(Seats);
         }
+        public async Task<IActionResult> TrainBogieByClass(string classId, string trainId)
+        {
+            var bogies= await _trainRepository.TrainBogieByClass(classId, trainId);
+            return Json(bogies);
+        }
 
 
 
