@@ -510,10 +510,14 @@
                 <div class="row align-items-center mb-2 routerow">
                     <div class="route-number col-md-1">${nextNumber}</div>
 
-                    <div class="col-md-9">
+                    <div class="col-md-6">
                         <input type="text"
                                class="form-control station-input"
                                placeholder="Enter Station Name">
+                    </div>
+                     <div class="col-md-3">
+                        <input type="time"
+                               class="form-control  station-input" id="departure">
                     </div>
 
                     <div class="col-md-2 text-end">
@@ -564,7 +568,11 @@
             $('#TrainRoute .routerow').each(function (index) {
 
                 var input = $(this).find('.station-input');
+               
                 var stationName = input.val().trim();
+                var departureTime= $('#departure').val()
+                console.log(departureTime)
+                
 
                 if (stationName === "") {
                     input.focus();
@@ -585,9 +593,14 @@
                 input.css('border-color', '#e2e8f0');
 
                 routeList.push({
+                    orderNo: index + 1,
                     stationName: stationName,
-                    orderNo: index + 1
+                    departureTime:departureTime
+                   
+                    
                 });
+                console.log(routeList);
+                
             });
 
             if (!isValid) return;
